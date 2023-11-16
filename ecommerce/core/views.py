@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
+from .models import Categories, Products
 import datetime
 # Create your views here.
 
@@ -27,3 +28,8 @@ def time_now(request):
     now = datetime.datetime.now()
     html = "<html><body>It is now %s.</body></html>" % now
     return HttpResponse(html)
+
+
+def order(request):
+    template = loader.get_template('order.html')
+    return HttpResponse(template.render())

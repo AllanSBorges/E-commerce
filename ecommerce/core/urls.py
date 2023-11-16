@@ -8,5 +8,6 @@ urlpatterns = [
     path("single-product.html", views.product, name="single-product"),
     path("page", views.dois, name="dois"),
     path("now", views.time_now, name="time"),
+    path("order", views.order, name="order"),
 ]
 
