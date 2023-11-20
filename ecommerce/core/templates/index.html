@@ -79,7 +79,15 @@ https://templatemo.com/tm-571-hexashop
                                     <li><a rel="nofollow" href="https://templatemo.com/page/4" target="_blank">Template Page 4</a></li>
                                 </ul>
                             </li>
-                            <li class="scroll-to-section"><a href="#" class="btn btn-dark text-white d-flex align-items-center">Login</a></li>
+                            {% if user.is_authenticated %}
+                                <li class="scroll-to-section"><a href="#" class="btn btn-dark text-white d-flex align-items-center">Logout</a></li>
+                                <li class="scroll-to-section"><a href="#" class="btn btn-dark text-white d-flex align-items-center"><i class="fa fa-shopping-cart"></i> Login</a></li>
+                                
+                            {% else %}
+                                <li class="scroll-to-section"><a href="login" class="btn btn-dark text-white d-flex align-items-center">Login</a></li>
+                                
+                            {% endif %} 
+                            
                           </ul>        
                         <a class='menu-trigger'>
                             <span>Menu</span>
@@ -553,6 +561,7 @@ https://templatemo.com/tm-571-hexashop
     <!-- ***** Kids Area Ends ***** -->
 
     <!-- ***** Explore Area Starts ***** -->
+    <!--
     <section class="section" id="explore">
         <div class="container">
             <div class="row">
@@ -601,6 +610,7 @@ https://templatemo.com/tm-571-hexashop
             </div>
         </div>
     </section>
+    -->
     <!-- ***** Explore Area Ends ***** -->
 
     <!-- ***** Social Area Starts ***** -->
