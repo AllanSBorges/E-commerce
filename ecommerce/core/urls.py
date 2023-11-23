@@ -10,5 +10,6 @@ urlpatterns = [
     path("now", views.time_now, name="time"),
     path("order", views.order, name="order"),
     path("login", views.login, name="login"),
+    path("signup", views.signup, name="signup"),
 ]
 

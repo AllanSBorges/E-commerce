@@ -1,8 +1,19 @@
 from django.http import HttpResponse
 from django.template import loader
 from .models import Categories, Products
+from django.shortcuts import render, redirect
+
+
+
+
 import datetime
 # Create your views here.
+
+
+def signup(request):
+    template = loader.get_template('signup.html')
+    return HttpResponse(template.render())
+
 
 def index(request):
     template = loader.get_template('index.html')
