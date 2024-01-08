@@ -1,44 +1,51 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 
 
 # Create your models here.
 
-class CustomUser(User):
-    # Adicione campos adicionais, se necessário
-    pass
+class Customer(AbstractUser):
+    
+    
+    def __str__(self):
+        return self.username
 
-
-class Products(models.Model):
+class Product(models.Model):
     product_name = models.CharField(max_length = 30)
     product_description = models.CharField(max_length = 60)
     product_price = models.DecimalField(max_digits=7, decimal_places=2)
     product_status = models.BooleanField()
     product_image = models.ImageField(null=True)
 
-class Categories(models.Model):
+class Category(models.Model):
     category_name = models.CharField(max_length = 30)
     category_description = models.CharField(max_length = 60)
     
-class ProductCategories(models.Model):
-    product_id = models.ForeignKey("Products", on_delete=models.CASCADE)
-    category_id = models.ForeignKey("Categories", on_delete=models.CASCADE)
+class ProductCategory(models.Model):
+    product_id = models.ForeignKey("Product", on_delete=models.CASCADE)
+    category_id = models.ForeignKey("Category", on_delete=models.CASCADE)
     
 
-class Orders(models.Model):
+class Order(models.Model):
+    order_client = models.ForeignKey("Customer", on_delete=models.CASCADE)
     order_status = models.CharField(max_length = 15)
     order_date = models.DateField(auto_now=True)
     order_total = models.DecimalField(max_digits=7, decimal_places=2)
 
-class OrderProducts(models.Model):
-    item_id = models.ForeignKey("Products", on_delete=models.CASCADE)
-    order_id = models.ForeignKey("Orders", on_delete=models.CASCADE)
+class OrderProduct(models.Model):
+    item_id = models.ForeignKey("Product", on_delete=models.CASCADE)
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
     item_price = models.DecimalField(max_digits=7, decimal_places=2)
     item_quantity = models.PositiveIntegerField()
     
 class Address(models.Model):
-    user_id = models.ForeignKey("CustomUser", on_delete=models.CASCADE)
+    cep = models.IntegerField()
+    logradouro = models.CharField(max_length = 30)
+    complemento = models.CharField(max_length = 30, blank=True, null=True)
+    numero = models.IntegerField()
+    cidade = models.CharField(max_length = 30)
+    user_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
 
 
     
