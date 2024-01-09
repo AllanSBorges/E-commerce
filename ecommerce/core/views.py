@@ -14,20 +14,20 @@ import datetime
 
 def login_view(request):
     
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
 		# Authenticate
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, "You Have Been Logged In!")
-            return redirect('login')
-        else:
-            messages.success(request, "There Was An Error Logging In, Please Try Again...")
-            return redirect('login')
-    else:
-        return render(request, 'login.html', {})
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
+			messages.success(request, "You Have Been Logged In!")
+			return redirect('login')
+		else:
+			messages.success(request, "There Was An Error Logging In, Please Try Again...")
+			return redirect('login')
+	else:
+		return render(request, 'login.html', {})
 
     
 def logout_view(request):

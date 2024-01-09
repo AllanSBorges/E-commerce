@@ -7,9 +7,13 @@ from django.contrib.auth.models import User, AbstractUser
 
 class Customer(AbstractUser):
     
+    class Meta:
+        verbose_name= 'Usuário'
+        verbose_name_plural = 'Usuários'
+        ordering = ['first_name','last_name']
     
     def __str__(self):
-        return self.username
+        return self.first_name
 
 class Product(models.Model):
     product_name = models.CharField(max_length = 30)
@@ -18,9 +22,28 @@ class Product(models.Model):
     product_status = models.BooleanField()
     product_image = models.ImageField(null=True)
 
+    class Meta:
+        verbose_name= 'Produto'
+        verbose_name_plural = 'Produtos'
+        ordering = ['product_name']
+    
+    def __str__(self):
+        return self.product_name
+
+
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length = 30)
     category_description = models.CharField(max_length = 60)
+
+    class Meta:
+        verbose_name= 'Produto'
+        verbose_name_plural = 'Produtos'
+        ordering = ['product_name']
+    
+    def __str__(self):
+        return self.product_name
     
 class ProductCategory(models.Model):
     product_id = models.ForeignKey("Product", on_delete=models.CASCADE)
