@@ -3,14 +3,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <br><br><br><br><br>
+  
+
     {% if user.is_authenticated %}
         <h1>Bem vindo, {{ user.username }}</h1>
-        
     {% else %}
-
-    </form>
+ 
     
-    
- {% endif %}
+    {% endif %}
 {% endblock %}

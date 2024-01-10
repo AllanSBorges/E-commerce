@@ -14,9 +14,10 @@
 
 
     <!-- Additional CSS Files -->
-    <!--
-    <link rel="stylesheet" type="text/css" href="{% static 'css/' %}">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
+    <!--
     <link rel="stylesheet" type="text/css" href="{% static 'css/' %}">
 
     <link rel="stylesheet" href="{% static 'css/' %}">
@@ -26,39 +27,27 @@
     <link rel="stylesheet" href="{% static 'css/' %}">
     
     -->
-<!--
+  </head>
+  <body>
+    <nav class='navbar'>
+      <a href="/"><img src="{% static 'images/logo.png' %}" class='navbar-logo'></a>
+      <ul class='navbar-list'>
+        <li><a href="../signup" class='botao'>Cadastre-se</a></li>
+        <li><a href="../login" class='botao'>Login</a></li>
+        <li><a href="/">Home</a></li>
+      </ul> 
 
+    </nav>
 
+    {% block content %}
 
--->
-    </head>
-    
-    <body>
-    
-    <!-- ***** Preloader Start ***** -->
-    
-    <!-- ***** Preloader End ***** -->
-    
-    
-    <!-- ***** Header Area Start ***** -->
-    
-    <!-- ***** Header Area End ***** -->
+    {% endblock content %}
 
-    <!-- ***** Main Banner Area Start ***** -->
-    {% block content %}{% endblock %}
-    <!-- ***** Main Banner Area End ***** -->
+    <footer>
 
-    
-
-    <!-- ***** Explore Area Starts ***** -->
-
-    
-    <!-- ***** Subscribe Area Ends ***** -->
-
-    <!-- ***** Footer Start ***** -->
-    
-    
-
-    
+    </footer> 
   </body>
+<!--
+-->
+  
 </html>

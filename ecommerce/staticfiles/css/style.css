@@ -33,7 +33,6 @@
 /* Barra de Navegação */
 
 .navbar-list {
-	text-align: center;
 	width: 80%;
 	list-style-type: none;
 	margin: 0;
@@ -62,14 +61,13 @@
 
 .navbar {
 	display: flex;
-	width: 90%;
-	margin: 0 auto 0;
+	width: 100%;
 }
 
 .botao {
 	background-color: var(--clr-dark); /* Green */
 	border: none;
-	color: var(--clr-light) !important;
+	color: var(--clr-light);
 	margin: 0 5px 0;
 	padding: 15px 32px;
 	text-align: center;
@@ -83,8 +81,6 @@
    background-color: var(--clr-dark2); /* Green */
    color: var(--clr-light);	
 }
-
-/* Index */
 
 .categoria {
 	display: grid;

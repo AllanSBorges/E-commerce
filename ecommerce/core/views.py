@@ -36,25 +36,20 @@ def logout_view(request):
     
 
 def signup(request):
-    template = loader.get_template('signup.html')
-    return HttpResponse(template.render())
+    context = {}
+    return render(request, 'signup.html',context)
 
 
 def index(request):
-    template = loader.get_template('index.html')
-    return HttpResponse(template.render())
+    categorias = Category.objects.all()
+    context = {'categories': categorias}
+    return render(request,'index.html',context)
 
-def page(request):
-    template = loader.get_template('index.html')
-    context = {"nome": "Allan",
-               "data_nasc": "22/07/1991", }    
-    return HttpResponse(template.render(context))
 
-def product(request):
-    template = loader.get_template('single-product.html')
-    context = {"nome": "Allan",
-               "data_nasc": "22/07/1991", }    
-    return HttpResponse(template.render(context))
+def product(request,pk):
+    prod = Product.objects.get(pk=pk)
+    context = {"product": prod }    
+    return render(request,'single-product.html',context)
 
 def dois(request,year=2000,month=1):
     html = "<h1>",year,"</h1>","<h2>",month,"</h2>"
