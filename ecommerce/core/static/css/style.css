@@ -1,4 +1,10 @@
 /* Custom Properties, update these for your own design */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 
 :root {
 	--ff-primary: 'Source Sans Pro', sans-serif ;
@@ -25,12 +31,6 @@
 }
 
 /* Barra de Navegação */
-
-.navbar fixed-top bg-light {
-	padding-bottom: 10%;
-}
-
-/* Index */
 
 body {
 	background-color: var(--clr-light);
