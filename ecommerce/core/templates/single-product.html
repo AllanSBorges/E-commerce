@@ -3,6 +3,138 @@
 {% load static %}
 
 {% block content %}
-    {{ product.product_name }}
+<style>
+.quantity {
+    display: flex;
+    align-items: center;
+}
+
+input[type="number"] {
+    width: 40px;
+    text-align: center;
+    margin: 0 5px;
+    /* Ocultar as setas padrão do input[type="number"] */
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Estilizar os botões */
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style>
+     <!-- ***** Main Banner Area Start ***** -->
+     <div class="page-heading" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-content">
+                        <h2>Single Product Page</h2>
+                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Main Banner Area End ***** -->
+
+    
+    <!-- ***** Product Area Starts ***** -->
+    <section class="section" id="product">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                <div class="left-images">
+                    <img src="{{product.product_image.url }}" alt="">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="right-content">
+                    <h4>{{ product.product_name }}</h4>
+                    <span class="price">${{ product.product_price }}</span>
+                    <ul class="stars">
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                    </ul>
+                    <span>{{ product.product_description }}</span>
+                    <div class="quote">
+                        <i class="fa fa-quote-left"></i><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiuski smod.</p>
+                    </div>
+                    <div class="quantity-content">
+                        <div class="left-content">
+                            <h6>No. of Orders</h6>
+                        </div>
+                        <div class="right-content">
+                            <div class="quantity buttons_added">
+                                <input type="button" value="-" class="minus" onclick="decrement()">
+                                <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity">
+                                <input type="button" value="+" class="plus" onclick="increment()">
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="total">
+                        <h4>Total: $<strong id="total">{{ product.product_price }}</strong></h4>
+                        <div class="main-border-button"><a href="#">Add To Cart</a></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Product Area Ends ***** -->
+    <script>
+        function updateTotal() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value, 10);
+            var productPrice = parseFloat('{{ product.product_price }}'); // Substitua por como você está obtendo o preço do produto
+            var total = currentValue * productPrice;
+    
+            // Atualizar o conteúdo do elemento "total"
+            document.getElementById('total').innerHTML = total.toFixed(2);
+        }
+    
+        function increment() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value, 10);
+            quantityInput.value = currentValue + 1;
+    
+            // Chamar a função para atualizar o total
+            updateTotal();
+        }
+    
+        function decrement() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value, 10);
+    
+            // Certifique-se de que a quantidade não seja menor que 1
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+    
+            // Chamar a função para atualizar o total
+            updateTotal();
+        }
+    </script>
+    
+
 {% endblock %}
+
+
   
