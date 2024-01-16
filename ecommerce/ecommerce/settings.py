@@ -70,6 +70,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
+# Session Cookie
+
+# Configuração de armazenamento de sessão (pode variar dependendo do seu projeto)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Nome do cookie de sessão
+SESSION_COOKIE_NAME = 'cart'
+
+# Tempo de expiração do cookie de sessão (em segundos)
+SESSION_COOKIE_AGE = 3600  # Por exemplo, 1 hora
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

@@ -35,6 +35,20 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+/* Estilo personalizado para o botão */
+.btn-custom {
+    background-color: #fff; /* Fundo branco */
+    color: #000; /* Letras pretas */
+    border: 1px solid #000; /* Borda preta */
+    transition: background-color 0.3s, color 0.3s; /* Transição suave ao passar o mouse */
+}
+
+.btn-custom:hover {
+    background-color: #000; /* Fundo preto ao passar o mouse */
+    color: #fff; /* Letras brancas ao passar o mouse */
+}
+
 </style>
      <!-- ***** Main Banner Area Start ***** -->
      <div class="page-heading" id="top" style="display: none"> <!-- Oculto do Usuário-->
@@ -54,49 +68,53 @@ button:hover {
     
     <!-- ***** Product Area Starts ***** -->
     <section class="section" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                <div class="left-images">
-                    <img src="{{product.product_image.url }}" alt="">
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="right-content">
-                    <h4>{{ product.product_name }}</h4>
-                    <span class="price">${{ product.product_price }}</span>
-                    <ul class="stars">
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                    </ul>
-                    <span>{{ product.product_description }}</span>
-                    <div class="quote">
-                        <i class="fa fa-quote-left"></i><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiuski smod.</p>
+        <form method="POST" action="{% url 'order' %}">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                    <div class="left-images">
+                        <img src="{{product.product_image.url }}" alt="">
                     </div>
-                    <div class="quantity-content">
-                        <div class="left-content">
-                            <h6>No. of Orders</h6>
+                </div>
+                <div class="col-lg-4">
+                    <div class="right-content">
+                        <h4><input type="hidden" name='product_name' value="{{ product.product_name|safe }}">{{ product.product_name }}</h4>
+                        <span class="price">$<input type="hidden" name='product_price' value={{ product.product_price }}>{{ product.product_price }}</span>
+                        <ul class="stars">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>{{ product.product_description }}</span>
+                        <div class="quote">
+                            <i class="fa fa-quote-left"></i><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiuski smod.</p>
                         </div>
-                        <div class="right-content">
-                            <div class="quantity buttons_added">
-                                <input type="button" value="-" class="minus" onclick="decrement()">
-                                <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity">
-                                <input type="button" value="+" class="plus" onclick="increment()">
+                        <div class="quantity-content">
+                            <div class="left-content">
+                                <h6>No. of Orders</h6>
                             </div>
-                            
+                            <div class="right-content">
+                                <div class="quantity buttons_added">
+                                    <input type="button" value="-" class="minus" onclick="decrement()">
+                                    <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity">
+                                    <input type="button" value="+" class="plus" onclick="increment()">
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="total">
+                            <h4>Total: $<strong id="total">{{ product.product_price }}</strong></h4>
+                            <div class="main-border-button"> <input type="submit" class="btn btn-custom" value="Add To Cart"></div>
+                           
                         </div>
                     </div>
-                    <div class="total">
-                        <h4>Total: $<strong id="total">{{ product.product_price }}</strong></h4>
-                        <div class="main-border-button"><a href="#">Add To Cart</a></div>
-                    </div>
+                </div>
                 </div>
             </div>
-            </div>
-        </div>
+        </form>
     </section>
     <!-- ***** Product Area Ends ***** -->
     <script>

@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-
-
+from django.http import JsonResponse
+import json
 import datetime
 # Create your views here.
 
@@ -48,6 +48,10 @@ def index(request):
 
 def product(request,pk):
     prod = Product.objects.get(pk=pk)
+    
+    
+
+
     context = {"product": prod }    
     return render(request,'single-product.html',context)
 
@@ -62,6 +66,36 @@ def time_now(request):
 
 
 def order(request):
+     # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
+    
+    
+    if request.method == 'POST':
+        produto = request.POST['product_name']
+        quantidade = request.POST['quantity']
+        preco = request.POST['product_price']
+        print(request.POST)
+        preco = preco.replace(',','.')
+
+        total = float(preco) * int(quantidade)
+        
+        prod_id = Product.objects.get(product_name__iexact=produto).id
+
+
+        # Obtenha o carrinho da sessão ou crie um novo
+        carrinho = request.session.get('cart', {})
+
+        # Adicione o produto ao carrinho
+        carrinho[prod_id] = {
+        'nome': produto,
+        'preco': preco,
+        'quantidade':quantidade,
+        'total': total,
+        }
+
+        # Atualize a sessão com o carrinho modificado
+        request.session['cart'] = carrinho
+    pedido = request.session.get('cart', {})
+    context = {'pedido' : pedido}
     template = loader.get_template('order.html')
-    return HttpResponse(template.render())
+    return render(request,'order.html', context)
 
