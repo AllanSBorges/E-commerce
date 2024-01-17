@@ -1,7 +1,7 @@
 /* Custom Properties, update these for your own design */
 *,
 *::before,
-*:: after {
+*::after {
 	box-sizing: border-box;
 }
 
@@ -32,8 +32,6 @@
 
 /* Barra de Navegação */
 
-/* Index */
-
 body {
-	background-color: var(--clr-dark);
+	background-color: var(--clr-light);
 }
