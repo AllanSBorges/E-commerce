@@ -5,15 +5,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="page"),
+    path("", views.index_view, name="page"),
     path("page/<int:year>/<int:month>", views.dois, name="dois"),
-    path("single-product/<int:pk>", views.product, name="single-product"),
+    path("single-product/<int:pk>", views.product_view, name="single-product"),
     path("page/", views.dois, name="dois"),
     path("now/", views.time_now, name="time"),
-    path("order/", views.order, name="order"),
+    path("order/", views.order_view, name="order"),
     path("login/", views.login_view, name="login"),
-    path("signup/", views.signup, name="signup"),
+    path("signup/", views.signup_view, name="signup"),
     path("logout/", views.logout_view, name="logout"),
+    path("category/<int:pk>", views.categoria_view, name='categoria')
 ]
 
 if settings.DEBUG:

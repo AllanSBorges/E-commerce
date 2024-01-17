@@ -35,24 +35,21 @@ def logout_view(request):
     return redirect('index')
     
 
-def signup(request):
+def signup_view(request):
     context = {}
     return render(request, 'signup.html',context)
 
 
-def index(request):
+def index_view(request):
 
-    
     categorias = Category.objects.all()
-    
-    
     lista = []
-    
 
     for i in categorias:
         categoria = Category.objects.get(pk=i.id)
         produtos_da_categoria = categoria.productcategory_set.all()
-        lista.append((categoria,produtos_da_categoria))
+        if produtos_da_categoria:
+            lista.append((categoria,produtos_da_categoria))
     
     context= {'lista': lista}
         
@@ -60,7 +57,7 @@ def index(request):
     print(context)
     return render(request, 'index.html', context )
 
-def product(request,pk):
+def product_view(request,pk):
     prod = Product.objects.get(pk=pk)
     context = {"product": prod }    
     return render(request,'single-product.html',context)
@@ -75,7 +72,7 @@ def time_now(request):
     return HttpResponse(html)
 
 
-def order(request):
+def order_view(request):
      # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
     
     
@@ -104,8 +101,18 @@ def order(request):
 
         # Atualize a sessão com o carrinho modificado
         request.session['cart'] = carrinho
+
     pedido = request.session.get('cart', {})
     context = {'pedido' : pedido}
     template = loader.get_template('order.html')
     return render(request,'order.html', context)
 
+def categoria_view(request, pk):
+
+    categoria = Category.objects.get(pk=pk)
+    produtos_da_categoria = categoria.productcategory_set.all()
+    
+    context = {'categoria': categoria,
+               'produtos': produtos_da_categoria}
+    print(context)
+    return render(request,'products.html', context)
