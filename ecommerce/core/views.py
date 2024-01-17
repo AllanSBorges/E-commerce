@@ -41,17 +41,27 @@ def signup(request):
 
 
 def index(request):
-    categorias = Category.objects.all()
-    context = {'categories': categorias}
-    return render(request,'index.html',context)
 
+    
+    categorias = Category.objects.all()
+    
+    
+    lista = []
+    
+
+    for i in categorias:
+        categoria = Category.objects.get(pk=i.id)
+        produtos_da_categoria = categoria.productcategory_set.all()
+        lista.append((categoria,produtos_da_categoria))
+    
+    context= {'lista': lista}
+        
+        
+    print(context)
+    return render(request, 'index.html', context )
 
 def product(request,pk):
     prod = Product.objects.get(pk=pk)
-    
-    
-
-
     context = {"product": prod }    
     return render(request,'single-product.html',context)
 
