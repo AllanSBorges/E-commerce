@@ -34,7 +34,7 @@
         </div>
         <div class="container">
             <div class="row">
-                {% for produto in produtos %}
+                {% for item in itens_paginados %}
                 <div class="col-lg-4">
                     <div class="item">
                         <div class="thumb">
@@ -42,14 +42,14 @@
                                 <ul>
                                     <li><a href="single-product.html"><i class="fa fa-eye"></i></a></li>
                                     <li><a href="single-product.html"><i class="fa fa-star"></i></a></li>
-                                    <li><a href="../single-product/{{ produto.product_id.id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li><a href="../single-product/{{ item.product_id.id }}"><i class="fa fa-shopping-cart"></i></a></li>
                                 </ul>
                             </div>
-                            <img src="{{ produto.product_id.product_image.url }}" alt="">
+                            <img src="{{ item.product_id.product_image.url }}" alt="">
                         </div>
                         <div class="down-content">
-                            <h4>{{ produto.product_id.product_name }}</h4>
-                            <span>{{ produto.product_id.product_price }}</span>
+                            <h4>{{ item.product_id.product_name }}</h4>
+                            <span>{{ item.product_id.product_price }}</span>
                             <ul class="stars">
                                 <li><i class="fa fa-star"></i></li>
                                 <li><i class="fa fa-star"></i></li>
@@ -61,9 +61,44 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                <div class="col-lg-12">
+                    <div class="pagination">
+                        
+                            <ul>
+                                <li>
+                                    {% if itens_paginados.has_previous %}
+                                        <a href="?page=1">&laquo;&laquo;</a>
+                                        <a href="?page={{ itens_paginados.previous_page_number }}">&laquo;</a>            
+                                    {% else %}
+                                        <a>&laquo;&laquo;</a>
+                                        <a >&laquo;</a>
+                                    {% endif %}
+
+                                </li>
+                                {% for page_num in itens_paginados.paginator.page_range %}    
+                                <li class="{% if itens_paginados.number == page_num %}active{% endif %}">                                    
+                                    <a href="?page={{ page_num }}">{{ page_num }}</a>                                    
+                                </li>
+                                {% endfor %}
+                                <li>
+                                    {% if itens_paginados.has_next %}
+                                        <a href="?page={{ itens_paginados.next_page_number }}">&raquo;</a>
+                                        <a href="?page={{ itens_paginados.paginator.num_pages }}">&raquo;&raquo;</a>                                    
+                                    {% else %}
+                                        <a>&raquo;</a>
+                                        <a >&raquo;&raquo;</a>
+                                    {% endif %}
+                                </li>                       
+                            </ul>
+                        
+                    </div>
+                </div>
                 
             </div>
         </div>
+        
     </section>
+  
     <!-- ***** Products Area Ends ***** -->
  {% endblock content %}
