@@ -6,8 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
-import json
+from random import sample
 import datetime
+
 # Create your views here.
 
 
@@ -44,6 +45,12 @@ def index_view(request):
 
     categorias = Category.objects.all()
     lista = []
+    
+    aux = []
+    for i in categorias:
+        aux.append(i)
+    
+    escolhidas = sample(aux,4)
 
     for i in categorias:
         categoria = Category.objects.get(pk=i.id)
@@ -51,7 +58,8 @@ def index_view(request):
         if produtos_da_categoria:
             lista.append((categoria,produtos_da_categoria))
     
-    context= {'lista': lista}
+    context= {'lista': lista,
+              'escolhidas': escolhidas}
         
         
     print(context)
@@ -107,7 +115,7 @@ def order_view(request):
     template = loader.get_template('order.html')
     return render(request,'order.html', context)
 
-def categoria_view(request, pk):
+def category_view(request, pk):
 
     categoria = Category.objects.get(pk=pk)
     produtos_da_categoria = categoria.productcategory_set.all()
@@ -116,3 +124,9 @@ def categoria_view(request, pk):
                'produtos': produtos_da_categoria}
     print(context)
     return render(request,'products.html', context)
+
+def categories_view(request):
+     categorias = Category.objects.all()
+     context = {'categorias': categorias }
+
+     return render(request, 'categorias.html',context )
