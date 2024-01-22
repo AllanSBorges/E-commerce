@@ -63,18 +63,21 @@ https://templatemo.com/tm-571-hexashop
                             <li class="submenu">
                                 <a href="javascript:;">Pages</a>
                                 <ul>
-                                  <li><a href="../login">Login</a></li>                
+                                  {% if user.is_authenticated %}
+                                    <li><a href="../login">Meu Perfil</a></li>                                  
+                                  {% else %}
+                                    <li><a href="../login">Login</a></li>
+                                  {% endif%}
                                   <li><a href="{% url 'signup' %}">Cadastre-se</a></li>
                                   <li><a href="{% url 'order' %}">Carrinho</a></li>   
                                 </ul>
                             </li>
                             <li class="submenu">
-                                <a href="javascript:;">Features</a>
+                                <a href="javascript:;">Categorias</a>
                                 <ul>
-                                    <li><a href="#">Features Page 1</a></li>
-                                    <li><a href="#">Features Page 2</a></li>
-                                    <li><a href="#">Features Page 3</a></li>
-                                    <li><a rel="nofollow" href="https://templatemo.com/page/4" target="_blank">Template Page 4</a></li>
+                                    {% for categoria in categorias %}
+                                        <li><a href="../category/{{ categoria.id }}">{{ categoria.category_name }}</a></li>
+                                    {% endfor %}                                
                                 </ul>
                             </li>
                             {% if user.is_authenticated %}

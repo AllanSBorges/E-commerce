@@ -97,7 +97,7 @@ def order_view(request):
         print(request.POST)
         preco = preco.replace(',','.')
 
-        total = float(preco) * int(quantidade)
+        subtotal = float(preco) * int(quantidade)
         
         prod_id = Product.objects.get(product_name__iexact=produto).id
 
@@ -110,7 +110,7 @@ def order_view(request):
         'nome': produto,
         'preco': preco,
         'quantidade':quantidade,
-        'total': total,
+        'subtotal': subtotal,
         }
 
         # Atualize a sessão com o carrinho modificado
@@ -123,12 +123,13 @@ def order_view(request):
     return render(request,'order.html', context)
 
 def category_view(request, pk):
+    categorias = Category.objects.all()
 
     categoria = Category.objects.get(pk=pk)
     produtos_da_categoria = categoria.productcategory_set.all()
     
     # Configurar a paginação
-    paginator = Paginator(produtos_da_categoria, 1)  # 12 itens por página
+    paginator = Paginator(produtos_da_categoria, 12)  # 12 itens por página
     page = request.GET.get('page')
 
     try:
@@ -141,7 +142,8 @@ def category_view(request, pk):
         itens_paginados = paginator.page(paginator.num_pages)
 
 
-    context = {'categoria': categoria,
+    context = {'categorias': categorias,
+               'categoria': categoria,
                'produtos': produtos_da_categoria,
                'itens_paginados': itens_paginados}
     print(context)

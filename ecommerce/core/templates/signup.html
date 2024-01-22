@@ -3,12 +3,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  
+<div class="main-banner">
+    <div class="container">
+        <div class="row"> 
 
-    {% if user.is_authenticated %}
-        <h1>Bem vindo, {{ user.username }}</h1>
-    {% else %}
- 
-    
-    {% endif %}
+            {% if user.is_authenticated %}
+                <h1>Bem vindo, {{ user.username }}</h1>
+            {% else %}
+            <div class="container">
+                <h2 class="row justify-content-md-center py-4">Cadastro de Usuário</h2>
+                <div class="row justify-content-md-center">
+                    
+                    <form method="POST" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                            <div class="row py-1 px-3">
+                                <h4>Dados pessoais</h4>
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="text" name="first-name" class="form-control" placeholder="Nome" required>
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="last-name" class="form-control" placeholder="Sobrenome" required>
+                                </div>
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="email" name="email" class="form-control" placeholder="Informe seu melhor e-mail" required>
+                                </div>
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="password" name="password" class="form-control" placeholder="Digite sua senha" required>
+                                </div>
+                            </div>                            
+                            <div class="row py-1 px-3">
+                                <h4>Dados do endereço</h4>
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="text" name="logradouro" class="form-control" placeholder="Logradouro" required>
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="complemento" class="form-control" placeholder="Complemento">                                
+                                </div>                            
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="text" name="cidade" class="form-control" placeholder="Cidade">                                
+                                </div>                            
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="number" name="numero" class="form-control" placeholder="Número" style="width: 90px; appearance: textfield; text-align:center;">                                
+                                </div>                                
+                                <div class="col">
+                                    <input type="number" name="cep" class="form-control" placeholder="CEP" style="width: 125px; appearance: textfield; text-align:center;">                                
+                                </div>
+                            </div>
+                            
+
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="submit" value="Finalizar" class="btn btn-dark">
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock %}
