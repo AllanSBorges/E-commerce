@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from .models import Category, Product
+from .models import Category, Product, Customer
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -41,6 +41,27 @@ def logout_view(request):
 def signup_view(request):
     categorias = Category.objects.all()
     context = {'categorias': categorias}
+
+    if request.method == 'POST':
+        print(request.POST)
+        f_name = request.POST['first-name']
+        l_name = request.POST['last-name']
+        e = request.POST['email']
+        p = request.POST['password']
+
+        logradouro = request.POST['logradouro']
+        complemento = request.POST['complemento']
+        cidade = request.POST['cidade']
+        numero = request.POST['numero']
+        cep = request.POST['cep']
+
+        usuario = Customer.objects.create_user(username=f_name, first_name = f_name, last_name = l_name, email = e, password = p)
+        usuario.save()
+        return render(request,'signup.html',context)
+
+
+
+
     return render(request, 'signup.html',context)
 
 

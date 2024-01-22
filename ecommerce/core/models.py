@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User, AbstractUser, BaseUserManager
 
 
 
 # Create your models here.
 
+
 class Customer(AbstractUser):
+   
     
     class Meta:
         verbose_name= 'Usuário'
@@ -14,6 +16,10 @@ class Customer(AbstractUser):
     
     def __str__(self):
         return self.first_name
+
+
+    
+   
 
 class Product(models.Model):
     product_name = models.CharField(max_length = 30, verbose_name='Produto')
