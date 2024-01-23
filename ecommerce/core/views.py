@@ -108,17 +108,17 @@ def time_now(request):
 
 
 def order_view(request):
-     # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
+   
     categorias = Category.objects.all()
     
     if request.method == 'POST':
         produto = request.POST['product_name']
         quantidade = request.POST['quantity']
         preco = request.POST['product_price']
-        print(request.POST)
+        print(request)
         preco = preco.replace(',','.')
 
-        subtotal = float(preco) * int(quantidade)
+        subtotal = round(float(preco) * int(quantidade),2)
         
         prod_id = Product.objects.get(product_name__iexact=produto).id
 
@@ -127,19 +127,33 @@ def order_view(request):
         carrinho = request.session.get('cart', {})
 
         # Adicione o produto ao carrinho
-        carrinho[prod_id] = {
-        'nome': produto,
-        'preco': preco,
-        'quantidade':quantidade,
-        'subtotal': subtotal,
-        }
+        if str(prod_id) in carrinho.keys():
+            carrinho[str(prod_id)]['quantidade'] = int(carrinho[str(prod_id)]['quantidade']) + int(quantidade)
+            carrinho[str(prod_id)]['subtotal'] = round(float(carrinho[str(prod_id)]['subtotal']) + float(subtotal),2)
+        else:
+            carrinho[prod_id] = {
+            'nome': produto,
+            'preco': preco,
+            'quantidade':quantidade,
+            'subtotal': subtotal,
+            }
+
+        
+
 
         # Atualize a sessão com o carrinho modificado
         request.session['cart'] = carrinho
 
+    # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
     pedido = request.session.get('cart', {})
+    total = 0
+    
+    for prod in pedido.keys():
+        total += float(pedido[prod]['subtotal'])
+
     context = {'pedido' : pedido,
-               'categorias' :categorias, }
+               'categorias' :categorias,
+                'total': total, }
     template = loader.get_template('order.html')
     return render(request,'order.html', context)
 

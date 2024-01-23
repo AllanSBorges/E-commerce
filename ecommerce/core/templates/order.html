@@ -3,6 +3,55 @@
 {% block title %}Django Ecommerce {% endblock %}
 
 {% block content %}
+<style>
+    .quantity {
+        display: flex;
+        align-items: center;
+    }
+    
+    input[type="number"] {
+        width: 40px;
+        text-align: center;
+        margin: 0 5px;
+        /* Ocultar as setas padrão do input[type="number"] */
+        -moz-appearance: textfield;
+        border: none;
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    /* Estilizar os botões */
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    /* Estilo personalizado para o botão */
+    .btn-custom {
+        background-color: #fff; /* Fundo branco */
+        color: #000; /* Letras pretas */
+        border: 1px solid #000; /* Borda preta */
+        transition: background-color 0.3s, color 0.3s; /* Transição suave ao passar o mouse */
+    }
+    
+    .btn-custom:hover {
+        background-color: #000; /* Fundo preto ao passar o mouse */
+        color: #fff; /* Letras brancas ao passar o mouse */
+    }
+    
+    </style>
+
 
     <!-- ***** Main Banner Area Start ***** -->
     <!--
@@ -23,33 +72,108 @@
 
 
     <!-- ***** Product Area Starts ***** -->
-    <br><br><br>
-    <div class="container mt-5">
-        <div class="table-responsive">
-            <h2>Itens do Pedido</h2>
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Nome do Produto</th>
-                        <th scope="col">Preço</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for chave, valor in pedido.items %}
-                    <tr>
-                        <td>{{ valor.nome }}</td>
-                        <td>${{ valor.preco }}</td>
-                        <td>{{ valor.quantidade }}</td>
-                        <td>${{ valor.subtotal }}</td>
-                    </tr>
-                {% endfor %}
-              
-                    <!-- Adicione mais linhas conforme necessário -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <div class="row-fluid pb-3">
+        <section class="section pt-5 mt-5">
+            <div class="container">
+                <div class="table-responsive">
+                    <h2>Itens do Pedido</h2>
+                    <div class="row-fluid">
+                        <form method="POST" action="{% url 'confirmar' %}">
+                            {% csrf_token %}
+                            <table class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nome do Produto</th>
+                                        <th scope="col">Preço</th>
+                                        <th scope="col">Quantidade</th>
+                                        <th scope="col">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for chave, valor in pedido.items %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ valor.nome }}</td>
+                                        <td>$<input type="number" class="input-text qty text" id="preco{{ forloop.counter }}" value="{{ valor.preco|floatformat:2 }}" pattern="" inputmode="" readonly style="width: 100px;" disabled></td>
+                                        <td>
+                                            <div class="quantity buttons_added">
+                                                <input type="button" value="-" class="minus" onclick="decrement({{ forloop.counter }})">
+                                                <input type="number" step="1" min="1" max="" name="quantity{{ forloop.counter }}" value="{{ valor.quantidade }}" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity{{ forloop.counter }}" onchange="updateTotal({{ forloop.counter }})" disabled>
+                                                <input type="button" value="+" class="plus" onclick="increment({{ forloop.counter }})">
+                                            </div>
+                                        </td>
+                                        <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                                
+                                <!-- Adicione mais linhas conforme necessário -->
+                                </tbody>
+                                </table>
+                                
+                                <div class="conteiner">
+                                    <div class="row-fluid clearfix d-inline">
+                                        <h5 class="text-right pb-1">Total: $<span id="total">{{ total|floatformat:2 }}</span></h5>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <a href="{% url 'categories' %}" class="btn btn-dark float-left">Continuar comprando</a>
+                                        <input type="submit" class="btn btn-success float-right" value="Finalizar pedido">
+                                    </div>
+                                </div>
+                                
+                                </form>
+                                </div>
+                                </div>
+                                </div>
+                                </section>
+                                </div>
+                                
+                                <script>
+                                    function updateTotal(counter) {
+                                        var quantityInput = document.getElementById('quantity' + counter);
+                                        var currentValue = parseInt(quantityInput.value, 10);
+                                        var priceInput = document.getElementById('preco' + counter);
+                                        var productPrice = parseFloat(priceInput.value);
+                                        var subtotalElement = document.getElementById('subtotal' + counter);
+                                        var totalElement = document.getElementById('total');
+                                        var total = 0;
+                                
+                                        // Atualizar o conteúdo do elemento subtotal
+                                        subtotalElement.innerHTML = (currentValue * productPrice).toFixed(2);
+                                
+                                        // Calcular o novo total geral
+                                        {% for chave, valor in pedido.items %}
+                                            total += parseFloat(document.getElementById('subtotal{{ forloop.counter }}').innerHTML);
+                                        {% endfor %}
+                                
+                                        // Atualizar o conteúdo do elemento total
+                                        totalElement.innerHTML = total.toFixed(2);
+                                    }
+                                
+                                    function increment(counter) {
+                                        var quantityInput = document.getElementById('quantity' + counter);
+                                        var currentValue = parseInt(quantityInput.value, 10);
+                                        quantityInput.value = currentValue + 1;
+                                
+                                        // Chamar a função para atualizar o total
+                                        updateTotal(counter);
+                                    }
+                                
+                                    function decrement(counter) {
+                                        var quantityInput = document.getElementById('quantity' + counter);
+                                        var currentValue = parseInt(quantityInput.value, 10);
+                                
+                                        // Certifique-se de que a quantidade não seja menor que 1
+                                        if (currentValue > 1) {
+                                            quantityInput.value = currentValue - 1;
+                                        }
+                                
+                                        // Chamar a função para atualizar o total
+                                        updateTotal(counter);
+                                    }
+                                </script>
+                                
+                    
+
 {% endblock content %}
     

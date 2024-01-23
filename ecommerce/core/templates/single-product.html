@@ -106,7 +106,7 @@ button:hover {
                             </div>
                         </div>
                         <div class="total">
-                            <h4>Total: $<strong id="total">{{ product.product_price }}</strong></h4>
+                            <h4>Total: $<strong id="total">{{ product.product_price|floatformat:2 }}</strong></h4>
                             <div class="main-border-button"> <input type="submit" class="btn btn-custom" value="Add To Cart"></div>
                            
                         </div>

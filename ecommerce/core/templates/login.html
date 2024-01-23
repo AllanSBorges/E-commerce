@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Hexashop - Login Page{% endblock %}
+{% block title %}Hexashop - Página de Login{% endblock %}
 {% block content %}
 
 
@@ -15,13 +15,13 @@
            <div class="container mt-5">
            <!-- Alerta de Sucesso -->
                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                   <strong>Sucesso!</strong> Sua operação foi concluída com êxito.
+                   <strong>Sucesso!</strong> Login realizado com sucesso.
                    <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
                          <span aria-hidden="true">&times;</span>
                    </button>
                 </div>
             </div>
-            <h1> Hello World, {{ user.username }} </h1>
+            <h1>Seja bem vindo {{ user.username }}! </h1>
   
         {% else %}
         <h2 class="container mt-5">Login</h2>
@@ -31,7 +31,7 @@
 	            {% csrf_token %}
 
               <div class='loginform'>
-                <label for='username'>Login: </lable> <input type='text' id='username' name='username'>
+                <label for='username'>Login: </lable> <input type='text' id='username' name='username' style="margin-left: 9px;">
               </div>
               <div class='loginform'>
                 <label for='password'>Senha: </label> <input type='password' id='password' name='password'>
