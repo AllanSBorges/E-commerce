@@ -16,7 +16,7 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("category/<int:pk>", views.category_view, name='category'),
     path('categories/', views.categories_view, name='categories'),
-    path('confirmar/', views.index_view, name="confirmar")
+    path('confirmar/', views.confirmar_view, name="confirmar")
 ]
 
 if settings.DEBUG:

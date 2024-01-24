@@ -157,6 +157,13 @@ def order_view(request):
     template = loader.get_template('order.html')
     return render(request,'order.html', context)
 
+def confirmar_view(request):
+    categorias = Category.objects.all()
+    context = {'categorias': categorias,
+               }
+
+    return render(request,'confirmar.html', context)
+
 def category_view(request, pk):
     categorias = Category.objects.all()
 

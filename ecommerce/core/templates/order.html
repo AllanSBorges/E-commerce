@@ -50,7 +50,7 @@
         color: #fff; /* Letras brancas ao passar o mouse */
     }
     
-    </style>
+</style>
 
 
     <!-- ***** Main Banner Area Start ***** -->
@@ -92,24 +92,22 @@
                                 </thead>
                                 <tbody>
                                     {% for chave, valor in pedido.items %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ valor.nome }}</td>
-                                        <td>$<input type="number" class="input-text qty text" id="preco{{ forloop.counter }}" value="{{ valor.preco|floatformat:2 }}" pattern="" inputmode="" readonly style="width: 100px;" disabled></td>
-                                        <td>
-                                            <div class="quantity buttons_added">
-                                                <input type="button" value="-" class="minus" onclick="decrement({{ forloop.counter }})">
-                                                <input type="number" step="1" min="1" max="" name="quantity{{ forloop.counter }}" value="{{ valor.quantidade }}" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity{{ forloop.counter }}" onchange="updateTotal({{ forloop.counter }})" disabled>
-                                                <input type="button" value="+" class="plus" onclick="increment({{ forloop.counter }})">
-                                            </div>
-                                        </td>
-                                        <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>
-                                    </tr>
-                                {% endfor %}
-                                
-                                <!-- Adicione mais linhas conforme necessário -->
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ valor.nome }}</td>
+                                            <td>$<input type="number" class="input-text qty text" id="preco{{ forloop.counter }}" value="{{ valor.preco|floatformat:2 }}" pattern="" inputmode="" readonly style="width: 100px;" disabled></td>
+                                            <td>
+                                                <div class="quantity buttons_added">
+                                                    <input type="button" value="-" class="minus" onclick="decrement({{ forloop.counter }})">
+                                                    <input type="number" step="1" min="1" max="" name="quantity{{ forloop.counter }}" value="{{ valor.quantidade }}" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity{{ forloop.counter }}" onchange="updateTotal({{ forloop.counter }})" disabled>
+                                                    <input type="button" value="+" class="plus" onclick="increment({{ forloop.counter }})">
+                                                </div>
+                                            </td>
+                                            <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>
+                                        </tr>
+                                    {% endfor %}                                
                                 </tbody>
-                                </table>
+                            </table>
                                 
                                 <div class="conteiner">
                                     <div class="row-fluid clearfix d-inline">
@@ -121,57 +119,57 @@
                                     </div>
                                 </div>
                                 
-                                </form>
-                                </div>
-                                </div>
-                                </div>
-                                </section>
-                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
                                 
-                                <script>
-                                    function updateTotal(counter) {
-                                        var quantityInput = document.getElementById('quantity' + counter);
-                                        var currentValue = parseInt(quantityInput.value, 10);
-                                        var priceInput = document.getElementById('preco' + counter);
-                                        var productPrice = parseFloat(priceInput.value);
-                                        var subtotalElement = document.getElementById('subtotal' + counter);
-                                        var totalElement = document.getElementById('total');
-                                        var total = 0;
-                                
-                                        // Atualizar o conteúdo do elemento subtotal
-                                        subtotalElement.innerHTML = (currentValue * productPrice).toFixed(2);
-                                
-                                        // Calcular o novo total geral
-                                        {% for chave, valor in pedido.items %}
-                                            total += parseFloat(document.getElementById('subtotal{{ forloop.counter }}').innerHTML);
-                                        {% endfor %}
-                                
-                                        // Atualizar o conteúdo do elemento total
-                                        totalElement.innerHTML = total.toFixed(2);
-                                    }
-                                
-                                    function increment(counter) {
-                                        var quantityInput = document.getElementById('quantity' + counter);
-                                        var currentValue = parseInt(quantityInput.value, 10);
-                                        quantityInput.value = currentValue + 1;
-                                
-                                        // Chamar a função para atualizar o total
-                                        updateTotal(counter);
-                                    }
-                                
-                                    function decrement(counter) {
-                                        var quantityInput = document.getElementById('quantity' + counter);
-                                        var currentValue = parseInt(quantityInput.value, 10);
-                                
-                                        // Certifique-se de que a quantidade não seja menor que 1
-                                        if (currentValue > 1) {
-                                            quantityInput.value = currentValue - 1;
-                                        }
-                                
-                                        // Chamar a função para atualizar o total
-                                        updateTotal(counter);
-                                    }
-                                </script>
+    <script>
+        function updateTotal(counter) {
+            var quantityInput = document.getElementById('quantity' + counter);
+            var currentValue = parseInt(quantityInput.value, 10);
+            var priceInput = document.getElementById('preco' + counter);
+            var productPrice = parseFloat(priceInput.value);
+            var subtotalElement = document.getElementById('subtotal' + counter);
+            var totalElement = document.getElementById('total');
+            var total = 0;
+    
+            // Atualizar o conteúdo do elemento subtotal
+            subtotalElement.innerHTML = (currentValue * productPrice).toFixed(2);
+    
+            // Calcular o novo total geral
+            {% for chave, valor in pedido.items %}
+                total += parseFloat(document.getElementById('subtotal{{ forloop.counter }}').innerHTML);
+            {% endfor %}
+    
+            // Atualizar o conteúdo do elemento total
+            totalElement.innerHTML = total.toFixed(2);
+        }
+    
+        function increment(counter) {
+            var quantityInput = document.getElementById('quantity' + counter);
+            var currentValue = parseInt(quantityInput.value, 10);
+            quantityInput.value = currentValue + 1;
+    
+            // Chamar a função para atualizar o total
+            updateTotal(counter);
+        }
+    
+        function decrement(counter) {
+            var quantityInput = document.getElementById('quantity' + counter);
+            var currentValue = parseInt(quantityInput.value, 10);
+    
+            // Certifique-se de que a quantidade não seja menor que 1
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+    
+            // Chamar a função para atualizar o total
+            updateTotal(counter);
+        }
+    </script>
                                 
                     
 
