@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 from random import sample
 import datetime
 
@@ -16,7 +17,12 @@ import datetime
 
 def login_view(request):
     categorias = Category.objects.all()
-    context = {'categorias': categorias}
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod}
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -24,10 +30,10 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "You Have Been Logged In!")
-            return redirect('login')
+            messages.success(request, "Login realizado com sucesso!")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
         else:
-            messages.success(request, "There Was An Error Logging In, Please Try Again...")
+            messages.error(request, "Login ou senha inválidos, Por favor tente novamente...")
             return redirect('login')
     else:
         return render(request, 'login.html', context)
@@ -40,7 +46,12 @@ def logout_view(request):
 
 def signup_view(request):
     categorias = Category.objects.all()
-    context = {'categorias': categorias}
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod }
 
     if request.method == 'POST':
         print(request.POST)
@@ -66,6 +77,8 @@ def signup_view(request):
 
 
 def index_view(request):
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
 
     categorias = Category.objects.all()
     lista = []
@@ -84,7 +97,8 @@ def index_view(request):
     
     context= {'lista': lista,
               'escolhidas': escolhidas,
-              'categorias': categorias}
+              'categorias': categorias,
+              'qtd_prod': qtd_prod}
         
         
     
@@ -92,9 +106,13 @@ def index_view(request):
 
 def product_view(request,pk):
     categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
     prod = Product.objects.get(pk=pk)
     context = {"product": prod,
-               'categorias': categorias }    
+               'categorias': categorias,
+                'qtd_prod': qtd_prod }    
     return render(request,'single-product.html',context)
 
 def dois(request,year=2000,month=1):
@@ -110,6 +128,8 @@ def time_now(request):
 def order_view(request):
    
     categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
     
     if request.method == 'POST':
         produto = request.POST['product_name']
@@ -153,19 +173,28 @@ def order_view(request):
 
     context = {'pedido' : pedido,
                'categorias' :categorias,
-                'total': total, }
+               'total': total,
+               'qtd_prod': qtd_prod }
+    
     template = loader.get_template('order.html')
     return render(request,'order.html', context)
 
+@login_required(login_url='/login/')
 def confirmar_view(request):
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
     categorias = Category.objects.all()
-    context = {'categorias': categorias,
-               }
 
+
+
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod }
     return render(request,'confirmar.html', context)
 
 def category_view(request, pk):
     categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
 
     categoria = Category.objects.get(pk=pk)
     produtos_da_categoria = categoria.productcategory_set.all()
@@ -187,12 +216,17 @@ def category_view(request, pk):
     context = {'categorias': categorias,
                'categoria': categoria,
                'produtos': produtos_da_categoria,
-               'itens_paginados': itens_paginados}
+               'itens_paginados': itens_paginados,
+               'qtd_prod': qtd_prod}
     print(context)
     return render(request,'products.html', context)
 
 def categories_view(request):
      categorias = Category.objects.all()
-     context = {'categorias': categorias }
+     carrinho = request.session.get('cart', {})
+     qtd_prod = len(carrinho)
+
+     context = {'categorias': categorias,
+                'qtd_prod': qtd_prod }
 
      return render(request, 'categorias.html',context )
