@@ -100,12 +100,37 @@ https://templatemo.com/tm-571-hexashop
 
 <!-- Restante do conteúdo vai aqui -->
 
-    
-    
-    
+{% if messages %}
+    <section class="section pt-5">
+        <div class="container mt-5 pt-3">
+            {% for message in messages %}
 
-    
-   
+            {% if message.tags == "error" %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ message.tags|capfirst }}!</strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% endif %}
+
+            {% if message.tags == "success" %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ message.tags|capfirst }}!</strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% endif%}
+
+        
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+      
     
     {% block content %}
 

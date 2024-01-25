@@ -176,7 +176,7 @@ def order_view(request):
                'total': total,
                'qtd_prod': qtd_prod }
     
-    template = loader.get_template('order.html')
+    
     return render(request,'order.html', context)
 
 @login_required(login_url='/login/')

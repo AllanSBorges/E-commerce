@@ -5,63 +5,38 @@
 
 
     <!-- ***** Product Area Starts ***** -->
-   
-   <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <!-- Conteúdo centralizado aqui -->
-        {% if user.is_authenticated %}
+  <section class="section pt-5" >
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <!-- Conteúdo centralizado aqui -->
+          {% if user.is_authenticated %}
 
-           <div class="container mt-5">
-           <!-- Alerta de Sucesso -->
-               <div class="alert alert-success alert-dismissible fade show" role="alert">
-                   <strong>Sucesso!</strong> Login realizado com sucesso.
-                   <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                         <span aria-hidden="true">&times;</span>
-                   </button>
-                </div>
-            </div>
             <h1>Seja bem vindo {{ user.username }}! </h1>
-  
-        {% else %}                 
-          {% if messages %}
-            <div class="container mt-5 pt-3">
-              {% for message in messages %}
-                    {% if message.tags == "error" %}
-                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>{{ message.tags }}!</strong> {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                              <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                    {% else %}
-                      
-                    {% endif%}
+    
+          {% else %}                 
+            
 
-                   
-              {% endfor %}
+            <h2 class="container">Login</h2>
+            <div class="container"> 
+                
+                <form method="POST" action="{% url 'login' %}">
+                  {% csrf_token %}
 
+                  <div class='loginform'>
+                    <label for='username'>Login: </lable> <input type='text' id='username' name='username' style="margin-left: 9px;">
+                  </div>
+                  <div class='loginform'>
+                    <label for='password'>Senha: </label> <input type='password' id='password' name='password'>
+                  </div class='loginform'>
+                    <input type='submit' class="btn btn-dark" value='Logar'>
+                </form>
+              </div>
           {% endif %}
-
-          <h2 class="container mt-5">Login</h2>
-          <div class="container mt-1"> 
-              
-              <form method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-
-                <div class='loginform'>
-                  <label for='username'>Login: </lable> <input type='text' id='username' name='username' style="margin-left: 9px;">
-                </div>
-                <div class='loginform'>
-                  <label for='password'>Senha: </label> <input type='password' id='password' name='password'>
-                </div class='loginform'>
-                  <input type='submit' class="btn btn-dark" value='Logar'>
-              </form>
-            </div>
-        {% endif %}
-        
+          
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
 {% endblock %}   
