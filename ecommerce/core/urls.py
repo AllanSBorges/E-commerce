@@ -15,8 +15,10 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("logout/", views.logout_view, name="logout"),
     path("category/<int:pk>", views.category_view, name='category'),
-    path('categories/', views.categories_view, name='categories'),
-    path('confirmar/', views.confirmar_view, name="confirmar")
+    path("categories/", views.categories_view, name='categories'),
+    path("confirmar/", views.confirmar_view, name="confirmar"),
+    path("avaliar/<int:pk>", views.avaliar_view, name="confirmar"),
+    path("visualizar/<int:pk>", views.visualizar_view, name='visualizar'),
 ]
 
 if settings.DEBUG:

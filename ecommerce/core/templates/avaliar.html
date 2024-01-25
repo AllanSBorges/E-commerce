@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    #star-container {
+        font-size: 2em; /* Tamanho da fonte das estrelas */
+    }
+
+    .star {
+        color: #ddd; /* Cor das estrelas vazias */
+        cursor: pointer;
+    }
+
+    .star.filled {
+        color: #ffc107; /* Cor das estrelas preenchidas */
+    }
+</style>
+     <!-- ***** Main Banner Area Start ***** -->
+     <div class="page-heading" id="top" style="display: none"> <!-- Oculto do Usuário-->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-content">
+                        <h2>Single Product Page</h2>
+                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Main Banner Area End ***** -->
+
+    
+    <!-- ***** Product Area Starts ***** -->
+    <section class="section" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
+        <form method="POST" action="{% url 'order' %}">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                    <div class="left-images">
+                        <img src="{{product.product_image.url }}" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="right-content">
+                        <h4><input type="hidden" name='product_name' value="{{ product.product_name|safe }}">{{ product.product_name }}</h4>
+                        <span class="price">$<input type="hidden" name='product_price' value={{ product.product_price }}>{{ product.product_price }}</span>
+                        <ul class="stars">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        <span>{{ product.product_description }}</span>
+                        
+                    </div>
+                    <div class="row mt-2">
+                        <div id="rating-container">
+                        <input type="range" class="d-none" min="1" max="5" step="1" value="1" name="nota" id="nota">
+                        <h3>Avalie o produto</h3>
+                        <div id="star-container">
+                            <!-- Cinco estrelas vazias -->
+                            <span class="star filled"><i class="fa fa-star"></i></span>
+                            <span class="star filled"><i class="fa fa-star"></i></span>
+                            <span class="star filled"><i class="fa fa-star"></i></span>
+                            <span class="star filled"><i class="fa fa-star"></i></span>
+                            <span class="star filled"><i class="fa fa-star"></i></span>
+                        </div>
+                    </div>                       
+                    </div>      
+                    <div class="row mt-2">
+                        <textarea name="avaliacao" placeholder="Deixe aqui sua avaliação do produto: {{ product.product_name }}" rows="3" cols="30"></textarea>                     
+                    </div>
+                    <div class="row mt-2">
+                        <input type="submit" class="btn btn-dark" value="Avaliar">
+                    </div>
+                </div>
+              
+            </div>
+        </form>
+    </section>
+    <!-- ***** Product Area Ends ***** -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var rangeInput = document.getElementById('nota');
+            var starContainer = document.getElementById('star-container');
+        
+            // Adicione um ouvinte de mudança ao controle de faixa
+            rangeInput.addEventListener('input', function () {
+                updateStars(rangeInput.value);
+            });
+        
+            // Adicione ouvintes de clique a todas as estrelas
+            var stars = starContainer.querySelectorAll('.star');
+            stars.forEach(function (star, index) {
+                star.addEventListener('click', function () {
+                    rangeInput.value = index + 1;
+                    updateStars(rangeInput.value);
+                });
+            });
+        
+            // Função para atualizar o visual das estrelas com base na pontuação
+            function updateStars(value) {
+                // Remova a classe 'filled' de todas as estrelas
+                stars.forEach(function (star, index) {
+                    star.classList.remove('filled');
+        
+                    // Adicione a classe 'filled' às estrelas correspondentes à pontuação
+                    if (index < value) {
+                        star.classList.add('filled');
+                    }
+                });
+            }
+        });
+        
+        
+    </script>  
+
+{% endblock %}
+
+
+  

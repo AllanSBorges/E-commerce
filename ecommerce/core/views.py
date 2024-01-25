@@ -234,3 +234,28 @@ def categories_view(request):
                 'qtd_prod': qtd_prod }
 
      return render(request, 'categorias.html',context )
+
+def avaliar_view(request, pk):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+    product = Product.objects.get(pk=pk)
+
+    context = {'categorias': categorias,
+                'qtd_prod': qtd_prod,
+                'product': product }
+
+    return render(request, 'avaliar.html',context )
+
+def visualizar_view(request, pk):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+    product = Product.objects.get(pk=pk)
+
+    context = {'categorias': categorias,
+                'qtd_prod': qtd_prod,
+                'product': product }
+
+    return render(request, 'visualizar.html',context )
+
