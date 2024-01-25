@@ -129,13 +129,12 @@ def order_view(request):
    
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    
     
     if request.method == 'POST':
         produto = request.POST['product_name']
         quantidade = request.POST['quantity']
         preco = request.POST['product_price']
-        print(request)
         preco = preco.replace(',','.')
 
         subtotal = round(float(preco) * int(quantidade),2)
@@ -171,6 +170,7 @@ def order_view(request):
     for prod in pedido.keys():
         total += float(pedido[prod]['subtotal'])
 
+    qtd_prod = len(carrinho)
     context = {'pedido' : pedido,
                'categorias' :categorias,
                'total': total,
@@ -186,6 +186,10 @@ def confirmar_view(request):
     categorias = Category.objects.all()
 
 
+    if request.method == "POST":
+        for key, value in request.POST.items():
+            print(key, value, sep = ':')
+    
 
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod }
