@@ -16,9 +16,6 @@ class Customer(AbstractUser):
     
     def __str__(self):
         return self.first_name
-
-
-    
    
 
 class Product(models.Model):
@@ -35,8 +32,6 @@ class Product(models.Model):
     
     def __str__(self):
         return self.product_name
-
-
 
 
 class Category(models.Model):
@@ -84,3 +79,11 @@ class Address(models.Model):
     numero = models.IntegerField()
     cidade = models.CharField(max_length = 30)
     user_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
+
+class Avaliacao(models.Model):
+    customer_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
+    product_id = models.ForeignKey("Product", on_delete=models.CASCADE)
+    avaliacao = models.CharField(max_length = 30, blank=True, null=True)
+    nota = models.IntegerField()
+
+

@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from django.template import loader
-from .models import Category, Product, Customer
+from .models import Category, Product, Customer, Avaliacao
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import JsonResponse
+from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from random import sample
@@ -110,9 +110,9 @@ def product_view(request,pk):
     qtd_prod = len(carrinho)
 
     prod = Product.objects.get(pk=pk)
-    context = {"product": prod,
+    context = {'product': prod,
                'categorias': categorias,
-                'qtd_prod': qtd_prod }    
+               'qtd_prod': qtd_prod }    
     return render(request,'single-product.html',context)
 
 def dois(request,year=2000,month=1):
@@ -235,6 +235,7 @@ def categories_view(request):
 
      return render(request, 'categorias.html',context )
 
+@login_required(login_url='/login/')
 def avaliar_view(request, pk):
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
@@ -244,6 +245,30 @@ def avaliar_view(request, pk):
     context = {'categorias': categorias,
                 'qtd_prod': qtd_prod,
                 'product': product }
+    
+    if request.method == "POST":
+        nota = int(request.POST['nota'])
+        avaliacao = request.POST['avaliacao']
+        print(nota,avaliacao, sep=':')
+        print(request.POST)
+
+        product_id = Product.objects.get(pk=pk)
+        user_id = int(request.user.id)
+        cliente = Customer.objects.get(pk=user_id)
+        
+        try:
+            obj = Avaliacao.objects.create(customer_id = cliente, product_id = product_id ,avaliacao = avaliacao, nota = nota)
+            obj.save()
+            messages.success(request, "Agradecemos sua por sua avaliação.")
+
+        except Error:
+            messages.error(request, "Ops. Algo deu errado.\nTente realizar sua avaliação novamente.\n")
+            
+            
+            
+            
+        
+        
 
     return render(request, 'avaliar.html',context )
 

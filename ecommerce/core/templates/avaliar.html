@@ -31,11 +31,11 @@
         </div>
     </div>
     <!-- ***** Main Banner Area End ***** -->
-
+ 
     
     <!-- ***** Product Area Starts ***** -->
     <section class="section" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
-        <form method="POST" action="{% url 'order' %}">
+        <form method="POST" action="../avaliar/{{ product.pk }}">
             {% csrf_token %}
             <div class="container">
                 <div class="row">
@@ -60,7 +60,7 @@
                     </div>
                     <div class="row mt-2">
                         <div id="rating-container">
-                        <input type="range" class="d-none" min="1" max="5" step="1" value="1" name="nota" id="nota">
+                        <input type="range" class="d-none" min="1" max="5" step="1" value="5" name="nota" id="nota">
                         <h3>Avalie o produto</h3>
                         <div id="star-container">
                             <!-- Cinco estrelas vazias -->
@@ -83,6 +83,7 @@
             </div>
         </form>
     </section>
+    
     <!-- ***** Product Area Ends ***** -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
