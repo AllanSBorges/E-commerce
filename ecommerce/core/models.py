@@ -87,3 +87,12 @@ class Avaliacao(models.Model):
     nota = models.IntegerField()
 
 
+class Discount(models.Model):
+    descricao = models.CharField(max_length = 30)
+    validade = models.DateTimeField(auto_now=False, auto_now_add=False)
+    porcentagem = models.PositiveIntegerField()
+    codigo = models.CharField(max_length = 15)
+
+class DiscuntOrder(models.Model):
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
+    discount_id = models.ForeignKey("Discount", on_delete=models.CASCADE)

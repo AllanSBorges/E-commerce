@@ -9,7 +9,6 @@ from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from random import sample
-from django.http import JsonResponse
 import datetime
 
 # Create your views here.
@@ -58,6 +57,7 @@ def signup_view(request):
         print(request.POST)
         f_name = request.POST['first-name']
         l_name = request.POST['last-name']
+        u_name = request.POST['username']
         e = request.POST['email']
         p = request.POST['password']
 
@@ -67,7 +67,7 @@ def signup_view(request):
         numero = request.POST['numero']
         cep = request.POST['cep']
 
-        usuario = Customer.objects.create_user(username=f_name, first_name = f_name, last_name = l_name, email = e, password = p)
+        usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p)
         usuario.save()
         return render(request,'signup.html',context)
 
@@ -178,26 +178,6 @@ def order_view(request):
     
     return render(request,'order.html', context)
 
-def atualizar_carrinho_view(request):
-    if request.method == 'POST':
-        produto = request.POST.get('produto')
-        quantidade = request.POST.get('quantidade')
-        
-        
-        prod_id = Product.objects.get(product_name__iexact=produto).id
-        carrinho = request.session.get('cart', {})
-
-        try:
-            carrinho[str(prod_id)]['quantidade'] = int(quantidade)
-        except KeyError:
-            print("Produto não encontrado...")
-
-        # Atualize o cookie ou o banco de dados conforme necessário
-        # ...
-
-        return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'error'})
 
 @login_required(login_url='/login/')
 def confirmar_view(request):

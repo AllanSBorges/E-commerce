@@ -10,7 +10,7 @@
             {% if user.is_authenticated %}
                 <h1>Bem vindo, {{ user.username }}</h1>
             {% else %}
-            <div class="container">
+            <div class="container mx-3">
                 <h2 class="row justify-content-md-center py-4">Cadastro de Usuário</h2>
                 <div class="row justify-content-md-center">
                     
@@ -28,6 +28,9 @@
                                 </div>
                             </div>
                             <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="text" name="username" class="form-control" placeholder="Nome de Usuário" required>
+                                </div>
                                 <div class="col">
                                     <input type="email" name="email" class="form-control" placeholder="Informe seu melhor e-mail" required>
                                 </div>
