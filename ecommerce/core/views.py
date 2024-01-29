@@ -147,16 +147,13 @@ def order_view(request):
         carrinho = request.session.get('cart', {})
 
         # Adicione o produto ao carrinho
-        if str(prod_id) in carrinho.keys():
-            carrinho[str(prod_id)]['quantidade'] = int(carrinho[str(prod_id)]['quantidade']) + int(quantidade)
-            carrinho[str(prod_id)]['subtotal'] = round(float(carrinho[str(prod_id)]['subtotal']) + float(subtotal),2)
-        else:
-            carrinho[prod_id] = {
-            'nome': produto,
-            'preco': preco,
-            'quantidade':quantidade,
-            'subtotal': subtotal,
-            }
+        
+        carrinho[str(prod_id)] = {
+        'nome': produto,
+        'preco': preco,
+        'quantidade':quantidade,
+        'subtotal': subtotal,
+        }
 
         if int(quantidade) == 0:
             carrinho.pop(str(prod_id))       

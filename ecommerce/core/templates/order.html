@@ -107,9 +107,7 @@
                                                 </td>
                                                 <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>
                                                 <td class="d-flex justify-content-center">
-                                                    <button type="button" class="custom-button btn-dark rounded" onclick="deleteItem({{ forloop.counter }})">
-                                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                                    </button>
+                                                    <a href="../single-product/{{ chave }}" class="btn btn-dark float-left">Alterar qunatidade</a>
                                                 </td>
                                             </tr>
                                             <input type="hidden" name="num" value="{{ forloop.revcounter }}">
@@ -136,78 +134,7 @@
         </section>
     </div>
                                 
-    <script>
-        function updateTotal(counter) {
-            var quantityInput = document.getElementById('quantity' + counter);
-            var currentValue = parseInt(quantityInput.value, 10);
-            var priceInput = document.getElementById('preco' + counter);
-            var productPrice = parseFloat(priceInput.value);
-            var subtotalElement = document.getElementById('subtotal' + counter);
-            var totalElement = document.getElementById('total');
-            var total = 0;
     
-            // Atualizar o conteúdo do elemento subtotal
-            subtotalElement.innerHTML = (currentValue * productPrice).toFixed(2);
-    
-            // Calcular o novo total geral
-            {% for chave, valor in pedido.items %}
-                total += parseFloat(document.getElementById('subtotal{{ forloop.counter }}').innerHTML);
-            {% endfor %}
-    
-            // Atualizar o conteúdo do elemento total
-            totalElement.innerHTML = total.toFixed(2);
-        }
-    
-        function increment(counter) {
-            var quantityInput = document.getElementById('quantity' + counter);
-            var currentValue = parseInt(quantityInput.value, 10);
-            quantityInput.value = currentValue + 1;
-    
-            // Chamar a função para atualizar o total
-            updateTotal(counter);
-        }
-    
-        function decrement(counter) {
-            var quantityInput = document.getElementById('quantity' + counter);
-            var currentValue = parseInt(quantityInput.value, 10);
-    
-            // Certifique-se de que a quantidade não seja menor que 1
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-            else 
-            {
-                quantityInput.value = 0;
-                updateTotal(counter);
-                deleteItem(counter);
-            }
-    
-            // Chamar a função para atualizar o total
-            updateTotal(counter);
-        }
-
-        function deleteItem(counter) {
-            var quantityInput = document.getElementById('quantity' + counter);
-            var currentValue = parseInt(quantityInput.value, 10);
-    
-            // Certifique-se de que a quantidade não seja menor que 1
-            quantityInput.value = 0;
-
-            // Chame a função para atualizar o total
-            updateTotal(counter);
-           
-            
-            // Remova a linha HTML completa
-            var linha = document.getElementById('linha' + counter);
-            linha.remove();
-    
-    
-            
-            
-        }
-
-        
-    </script>
                                 
                     
 
