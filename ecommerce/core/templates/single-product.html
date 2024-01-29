@@ -99,7 +99,7 @@ button:hover {
                             <div class="right-content">
                                 <div class="quantity buttons_added">
                                     <input type="button" value="-" class="minus" onclick="decrement()">
-                                    <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity">
+                                    <input type="number" step="1" min="0" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity">
                                     <input type="button" value="+" class="plus" onclick="increment()">
                                 </div>
                                 
@@ -142,7 +142,7 @@ button:hover {
             var currentValue = parseInt(quantityInput.value, 10);
     
             // Certifique-se de que a quantidade não seja menor que 1
-            if (currentValue > 1) {
+            if (currentValue > 0) {
                 quantityInput.value = currentValue - 1;
             }
     

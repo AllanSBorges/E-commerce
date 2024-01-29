@@ -19,6 +19,7 @@ urlpatterns = [
     path("confirmar/", views.confirmar_view, name="confirmar"),
     path("avaliar/<int:pk>", views.avaliar_view, name="confirmar"),
     path("visualizar/<int:pk>", views.visualizar_view, name='visualizar'),
+    path("/atualizar-carrinho/", views.atualizar_carrinho_view, name="atualizar-carrinho"),
 ]
 
 if settings.DEBUG:

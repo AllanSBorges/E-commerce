@@ -89,7 +89,7 @@
                                             <th scope="col">Preço</th>
                                             <th scope="col">Quantidade</th>
                                             <th scope="col">Subtotal</th>
-                                            <th scope="col">Remover Item</th>
+                                            <th scope="col">Alterar Quantidade<br>Coloque 0 para cancelar a compra.</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -112,6 +112,7 @@
                                                     </button>
                                                 </td>
                                             </tr>
+                                            <input type="hidden" name="num" value="{{ forloop.revcounter }}">
                                         {% endfor %}                                
                                     </tbody>
                                 </table>
@@ -122,6 +123,7 @@
                                     </div>
                                     <div class="row-fluid">
                                         <a href="{% url 'categories' %}" class="btn btn-dark float-left">Continuar comprando</a>
+                                        
                                         <input type="submit" class="btn btn-success float-right" value="Finalizar pedido">
                                     </div>
                                 </div>
@@ -203,6 +205,8 @@
             
             
         }
+
+        
     </script>
                                 
                     

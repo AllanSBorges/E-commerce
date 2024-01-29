@@ -9,6 +9,7 @@ from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from random import sample
+from django.http import JsonResponse
 import datetime
 
 # Create your views here.
@@ -157,7 +158,8 @@ def order_view(request):
             'subtotal': subtotal,
             }
 
-        
+        if int(quantidade) == 0:
+            carrinho.pop(str(prod_id))       
 
 
         # Atualize a sessão com o carrinho modificado
@@ -179,17 +181,50 @@ def order_view(request):
     
     return render(request,'order.html', context)
 
+def atualizar_carrinho_view(request):
+    if request.method == 'POST':
+        produto = request.POST.get('produto')
+        quantidade = request.POST.get('quantidade')
+        
+        
+        prod_id = Product.objects.get(product_name__iexact=produto).id
+        carrinho = request.session.get('cart', {})
+
+        try:
+            carrinho[str(prod_id)]['quantidade'] = int(quantidade)
+        except KeyError:
+            print("Produto não encontrado...")
+
+        # Atualize o cookie ou o banco de dados conforme necessário
+        # ...
+
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error'})
+
 @login_required(login_url='/login/')
 def confirmar_view(request):
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
     categorias = Category.objects.all()
 
+    
 
     if request.method == "POST":
+        
+        i = 0
         for key, value in request.POST.items():
-            print(key, value, sep = ':')
-    
+            print(key, value)
+        while True:
+            quantidade = "quantity"+str(i)
+            print('aa')
+            if request.POST.get(quantidade):
+                print(request.POST.get(quantidade))
+            else:
+                break
+            i += 1
+        
+  
 
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod }
@@ -263,13 +298,7 @@ def avaliar_view(request, pk):
 
         except Error:
             messages.error(request, "Ops. Algo deu errado.\nTente realizar sua avaliação novamente.\n")
-            
-            
-            
-            
-        
-        
-
+                                          
     return render(request, 'avaliar.html',context )
 
 def visualizar_view(request, pk):
