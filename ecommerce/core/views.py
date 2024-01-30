@@ -54,7 +54,6 @@ def signup_view(request):
                'qtd_prod': qtd_prod }
 
     if request.method == 'POST':
-        print(request.POST)
         f_name = request.POST['first-name']
         l_name = request.POST['last-name']
         u_name = request.POST['username']
@@ -76,6 +75,16 @@ def signup_view(request):
 
     return render(request, 'signup.html',context)
 
+@login_required(login_url='/login/')
+def perfil_view(request):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod}
+    
+    return render(request, 'perfil.html', context)
 
 def index_view(request):
     carrinho = request.session.get('cart', {})

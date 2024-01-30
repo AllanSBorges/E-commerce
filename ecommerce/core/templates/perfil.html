@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Hexashop - Página de Login{% endblock %}
+{% block content %}
+
+
+    <!-- ***** Product Area Starts ***** -->
+  <section class="section pt-5" >
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <!-- Conteúdo centralizado aqui -->
+          {% if user.is_authenticated %}
+          <form method="POST" action="perfil">
+            {% csrf_token %}
+            <div class="row py-1 px-3">
+                <h4>Dados pessoais</h4>
+            </div>
+            <div class="row py-2 px-3">
+                <div class="col">
+                    <input type="text"  value="{{ user.first_name}}" name="first-name" class="form-control" placeholder="Nome" required>
+                </div>
+                <div class="col">
+                    <input type="text"  value="{{ user.last_name}}" name="last-name" class="form-control" placeholder="Sobrenome" required>
+                </div>
+            </div>
+            <div class="row py-2 px-3">
+                <div class="col">
+                    <input type="email" name="email" value="{{ user.email}}" class="form-control" placeholder="Informe seu melhor e-mail" required>
+                </div>
+            </div>
+            <div class="row py-2 px-3">
+                <div class="col">
+                    <input type="password" name="password" class="form-control" placeholder="Digite sua senha" required>
+                </div>
+            </div> 
+
+
+          </form>
+
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}   
