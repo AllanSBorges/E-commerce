@@ -81,6 +81,27 @@ def perfil_view(request):
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
 
+    if request.method == "POST":
+        nome = request.POST['first-name']
+        sobrenome = request.POST['last-name']
+        email = request.POST['email']
+
+        try:
+            Customer.objects.filter(pk = request.user.id).update(first_name=nome, last_name=sobrenome, email=email)
+            messages.success(request, "Perfil atualizado com sucesso.")
+        except Error:
+            messages.error(request, "Ops. Um erro ocorreu.")
+
+        context = {'categorias': categorias,
+               'qtd_prod': qtd_prod}
+
+        return render(request,'perfil.html', context)
+    
+
+
+    
+    
+
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod}
     

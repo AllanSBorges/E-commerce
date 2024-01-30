@@ -64,9 +64,11 @@ https://templatemo.com/tm-571-hexashop
                                 <a href="javascript:;">Pages</a>
                                 <ul>
                                   {% if user.is_authenticated %}
-                                    <li><a href="../perfil">Meu Perfil</a></li>                                  
+                                    <li><a href="../perfil/">Meu Perfil</a></li>
+                                    <li><a href="../perfil/">Meus Endereços</a></li>
+                                    <li><a href="../perfil/">Meus Pedidos </a></li>                                  
                                   {% else %}
-                                    <li><a href="../login">Login</a></li>
+                                    <li><a href="../login/">Login</a></li>
                                   {% endif%}
                                   <li><a href="{% url 'signup' %}">Cadastre-se</a></li>
                                   <li><a href="{% url 'order' %}">Pedido  <i class="fa fa-shopping-cart"><span class="badge badge-light">{{ qtd_prod }}</span></i></a></li>   
