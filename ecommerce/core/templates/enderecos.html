@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Hexashop - Página de Alteração de Senha{% endblock %}
+{% block content %}
+
+
+    <!-- ***** Product Area Starts ***** -->
+  <section class="section pt-5" >
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Conteúdo centralizado aqui -->
+                {% if user.is_authenticated %}
+
+                    <h2 class="container pb-2 d-flex justify-content-center">Meus Endereços</h2>
+                    <div class="container">
+                    </div>
+                {% endif %}          
+            </div>
+        </div>
+    </div>
+  </section>
+
+{% endblock %}   
