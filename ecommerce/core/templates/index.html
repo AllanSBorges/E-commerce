@@ -5,7 +5,7 @@
 {% block content %}
       
     <!-- ***** Main Banner Area Start ***** --> 
-    <div class="main-banner" id="top">
+    <div class="main-banner pt-5 mt-5" id="top">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6">
@@ -58,20 +58,20 @@
 
     <!-- ***** Men Area Starts ***** -->
    
-        <section class="section" id="men">
+        <section class="section pt-3" id="men">
             {% for categoria, produtos_da_categoria in lista %}
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="section-heading">
+                        <div class="section-heading mb-3">
                             <h2>{{ categoria.category_name }}</h2>
                             <span>{{ categoria.category_breve }}</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="container">
-                <div class="row">
+            
+            
+                <div class="row pt-1">
                     <div class="col-lg-12">
                         
                         <div class="men-item-carousel">

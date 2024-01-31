@@ -12,7 +12,7 @@
           <!-- Conteúdo centralizado aqui -->
           {% if user.is_authenticated %}
 
-          <h2 class="container">Alterar Senha</h2>
+          <h2 class="container pb-2">Alterar Senha</h2>
           <div class="container"> 
               
               <form method="POST" action="{% url 'alterar_senha/' %}">
@@ -27,7 +27,10 @@
                 <div class='loginform'>
                     <label for='senha2'>Confirmação: </label> <input type='password' id='senha2' name='senha2'>
                   </div class='loginform'>
+                </div>
+                <div class="loginform pt-2">
                   <input type='submit' class="btn btn-dark" value='Alterar senha'>
+                </div>
               </form>
             </div>
     
