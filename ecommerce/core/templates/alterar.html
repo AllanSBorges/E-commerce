@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Hexashop - Página de Alteração de Senha{% endblock %}
+{% block content %}
+
+
+    <!-- ***** Product Area Starts ***** -->
+  <section class="section pt-5" >
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <!-- Conteúdo centralizado aqui -->
+          {% if user.is_authenticated %}
+
+          <h2 class="container">Alterar Senha</h2>
+          <div class="container"> 
+              
+              <form method="POST" action="{% url 'alterar_senha/' %}">
+                {% csrf_token %}
+
+                <div class='loginform'>
+                  <label for='senha-atual'>Senha atual: </lable> <input type='password' id='senha-atual' name='senha-atual' style="margin-left: 10px;">
+                </div>
+                <div class='loginform'>
+                  <label for='senha1'>Nova senha: </label> <input type='password' id='senha1' name='senha1' style="margin-left: 11px;">
+                </div class='loginform'>
+                <div class='loginform'>
+                    <label for='senha2'>Confirmação: </label> <input type='password' id='senha2' name='senha2'>
+                  </div class='loginform'>
+                  <input type='submit' class="btn btn-dark" value='Alterar senha'>
+              </form>
+            </div>
+    
+                         
+            
+
+
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}   

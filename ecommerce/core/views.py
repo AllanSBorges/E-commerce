@@ -107,7 +107,7 @@ def alterar_senha(request):
     qtd_prod = len(carrinho)
 
     if request.method == "POST":
-        senha_atual = request.POST['senha_atual']
+        senha_atual = request.POST['senha-atual']
         senha1 = request.POST['senha1']
         senha2 = request.POST['senha2']
         
@@ -115,10 +115,11 @@ def alterar_senha(request):
             if senha1 == senha2:
                 messages.success(request, "Senha alterada com sucesso.")
                 request.user.set_password(senha1)
+                request.user.save()
             else:
-                messages.warning(request, "Senha 1 e senha 2 não são iguais.")
+                messages.warning(request, "Nova senha e Confirmação devem ser iguais.")
         else:
-            messages.error(request, "Algo de errado ocorreu.</br>Tente novamente...")
+            messages.error(request, "Algo de errado ocorreu. Tente novamente...")
 
     context = {'categorias': categorias,               
                'qtd_prod': qtd_prod}
