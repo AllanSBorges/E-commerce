@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from random import sample
 import datetime
 
@@ -85,6 +86,7 @@ def perfil_view(request):
         nome = request.POST['first-name']
         sobrenome = request.POST['last-name']
         email = request.POST['email']
+      
 
         try:
             Customer.objects.filter(pk = request.user.id).update(first_name=nome, last_name=sobrenome, email=email)
@@ -92,11 +94,69 @@ def perfil_view(request):
         except Error:
             messages.error(request, "Ops. Um erro ocorreu.")
 
-        context = {'categorias': categorias,
+    context = {'categorias': categorias,
                'qtd_prod': qtd_prod}
 
-        return render(request,'perfil.html', context)
+    return render(request,'perfil.html', context)
     
+
+@login_required(login_url='/login/')
+def alterar_senha(request):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    if request.method == "POST":
+        senha_atual = request.POST['senha_atual']
+        senha1 = request.POST['senha1']
+        senha2 = request.POST['senha2']
+        
+        if check_password(senha_atual,request.user.password):
+            if senha1 == senha2:
+                messages.success(request, "Senha alterada com sucesso.")
+                request.user.set_password(senha1)
+            else:
+                messages.warning(request, "Senha 1 e senha 2 não são iguais.")
+        else:
+            messages.error(request, "Algo de errado ocorreu.</br>Tente novamente...")
+
+    context = {'categorias': categorias,               
+               'qtd_prod': qtd_prod}
+        
+    return render(request,'alterar.html', context)
+
+@login_required(login_url='/login/')
+def pedidos_view(request):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,               
+               'qtd_prod': qtd_prod}
+
+
+    return render(request,'pedidos.html', context)
+
+@login_required(login_url='/login/')
+def enderecos_view(request):
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,               
+               'qtd_prod': qtd_prod}
+
+    return render(request, 'enderecos.html', context)
+
+
+
+         
+
+
+        
+
+
+
 
 
     
@@ -105,7 +165,7 @@ def perfil_view(request):
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod}
     
-    return render(request, 'perfil.html', context)
+    return render(request, 'alterar.html', context)
 
 def index_view(request):
     carrinho = request.session.get('cart', {})
