@@ -25,6 +25,9 @@ class Product(models.Model):
     product_status = models.BooleanField(verbose_name='Disponível')
     product_image = models.ImageField(null=True, verbose_name='Imagem')
 
+    product_netweight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso líquido (em Kg):")
+    product_weight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso total (em Kg):")
+
     class Meta:
         verbose_name= 'Produto'
         verbose_name_plural = 'Produtos'
@@ -78,7 +81,11 @@ class Address(models.Model):
     complemento = models.CharField(max_length = 30, blank=True, null=True)
     numero = models.IntegerField()
     cidade = models.CharField(max_length = 30)
+    estado = models.CharField(max_length = 30)
     user_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.logradouro}, {self.complemento}, {self.numero}, {self.cidade}, {self.cep},  {self.estado}"
 
 class Avaliacao(models.Model):
     customer_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
@@ -93,6 +100,6 @@ class Discount(models.Model):
     porcentagem = models.PositiveIntegerField()
     codigo = models.CharField(max_length = 15)
 
-class DiscuntOrder(models.Model):
+class DiscountOrder(models.Model):
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
     discount_id = models.ForeignKey("Discount", on_delete=models.CASCADE)

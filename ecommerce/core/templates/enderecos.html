@@ -14,11 +14,46 @@
 
                     <h2 class="container pb-2 d-flex justify-content-center">Meus Endereços</h2>
                     <div class="container">
+                        <form method="post" action="{% url 'enderecos/' %}">
+                          {% csrf_token %}
+                          
+                          
+                      
+                          
+                          
+                              
+                          
+                      
+                       
+                        <div class="accordion" id="accordionExample">
+                           {{ formset.management_form }}
+                           {% for form in formset.forms %}
+                              <div class="card">
+                                  <div class="card-header" id="headingOne">
+                                    <h2 class="mb-0">
+                                      <button class="btn btn-dark btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                        Endereço #{{ forloop.counter }}
+                                      </button>
+                                    </h2>
+                                </div>
+                              
+                                  <div id="collapse{{ forloop.counter }}" class="collapse show" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                      {{ form.as_table }}
+                                    </div>
+                                  </div>
+                              </div>
+                           {% endfor %}                            
+                        </div>
                     </div>
+                    <input class="btn btn-dark mt-2" type="submit" value="Salvar">
+                  </form>
                 {% endif %}          
             </div>
         </div>
     </div>
+  </div>
+
   </section>
 
 {% endblock %}   

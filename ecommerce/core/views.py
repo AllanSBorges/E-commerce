@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from .models import Category, Product, Customer, Avaliacao
+from .models import Category, Product, Customer, Avaliacao, Address
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -9,6 +9,8 @@ from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from django.forms import formset_factory, modelformset_factory
+from .forms import AddressForm
 from random import sample
 import datetime
 
@@ -145,28 +147,33 @@ def enderecos_view(request):
     qtd_prod = len(carrinho)
 
     context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod}
+               'qtd_prod': qtd_prod }
+    
+
+    AddressFormSet = modelformset_factory(Address, form=AddressForm, extra=1)
+    
+
+    if request.method == 'POST':
+        
+        formset = AddressFormSet(request.POST, queryset=Address.objects.filter(user_id=request.user))
+        
+        if formset.is_valid():
+            for form in formset:
+                    try:
+                        endereco = form.save(commit=False)
+                        endereco.user_id = request.user
+                        endereco.save()
+                    except Error:
+                        pass
+                    
+            return redirect('enderecos/')
+    else:
+        formset = AddressFormSet(queryset=Address.objects.filter(user_id=request.user))
+    
+    context.setdefault('formset',formset)
+
 
     return render(request, 'enderecos.html', context)
-
-
-
-         
-
-
-        
-
-
-
-
-
-    
-    
-
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod}
-    
-    return render(request, 'alterar.html', context)
 
 def index_view(request):
     carrinho = request.session.get('cart', {})
@@ -179,7 +186,10 @@ def index_view(request):
     for i in categorias:
         aux.append(i)
     
-    escolhidas = sample(aux,4)
+    if aux:
+        escolhidas = sample(aux,4) 
+    else:
+        escolhidas = []
 
     for i in categorias:
         categoria = Category.objects.get(pk=i.id)
