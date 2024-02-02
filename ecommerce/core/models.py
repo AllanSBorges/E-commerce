@@ -27,6 +27,9 @@ class Product(models.Model):
 
     product_netweight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso líquido (em Kg):")
     product_weight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso total (em Kg):")
+    product_height = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Altura (em cm):")
+    product_width = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Largura (em cm):")
+    product_depth = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Profundidade (em cm):")
 
     class Meta:
         verbose_name= 'Produto'
@@ -99,6 +102,10 @@ class Discount(models.Model):
     validade = models.DateTimeField(auto_now=False, auto_now_add=False)
     porcentagem = models.PositiveIntegerField()
     codigo = models.CharField(max_length = 15)
+
+    class Meta:
+        verbose_name = 'Desconto'
+        verbose_name_plural = 'Descontos'
 
 class DiscountOrder(models.Model):
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE)

@@ -80,6 +80,7 @@
                     <div class="row-fluid">
                         <form method="POST" action="{% url 'confirmar' %}">
                             {% csrf_token %}
+                            
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead class="thead-dark">
@@ -89,7 +90,7 @@
                                             <th scope="col">Preço</th>
                                             <th scope="col">Quantidade</th>
                                             <th scope="col">Subtotal</th>
-                                            <th scope="col">Alterar Quantidade<br>Coloque 0 para cancelar a compra.</th>
+                                            <th scope="col">Alterar Quantidade</th>
                                         </tr>
                                     </thead>
                                     <tbody>
