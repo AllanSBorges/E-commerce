@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 
 
 
@@ -26,10 +26,10 @@ class Product(models.Model):
     product_image = models.ImageField(null=True, verbose_name='Imagem')
 
     product_netweight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso líquido (em Kg):")
-    product_weight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso total (em Kg):")
+    product_weight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso bruto (em Kg):")
     product_height = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Altura (em cm):")
     product_width = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Largura (em cm):")
-    product_depth = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Profundidade (em cm):")
+    product_length = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Profundidade (em cm):")
 
     class Meta:
         verbose_name= 'Produto'

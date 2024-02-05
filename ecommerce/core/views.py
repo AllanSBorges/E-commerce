@@ -1,15 +1,15 @@
 from django.http import HttpResponse
-from django.template import loader
+
 from .models import Category, Product, Customer, Avaliacao, Address
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+
 from django.contrib import messages
 from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from django.forms import formset_factory, modelformset_factory
+from django.forms import modelformset_factory
 from .forms import AddressForm
 from random import sample
 import datetime
@@ -103,7 +103,7 @@ def perfil_view(request):
     
 
 @login_required(login_url='/login/')
-def alterar_senha(request):
+def alterar_senha_view(request):
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
@@ -174,6 +174,24 @@ def enderecos_view(request):
 
 
     return render(request, 'enderecos.html', context)
+
+@login_required(login_url='/login/')
+def entrega_view(request):
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    categorias = Category.objects.all()
+    enderecos = Address.objects.filter(user_id=request.user)
+
+
+    context = {
+        'categorias': categorias,
+        'qtd_prod': qtd_prod,
+        'enderecos': enderecos
+    }
+
+    return render(request, 'entrega.html', context)
+
 
 def index_view(request):
     carrinho = request.session.get('cart', {})

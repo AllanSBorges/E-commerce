@@ -20,9 +20,10 @@ urlpatterns = [
     path("avaliar/<int:pk>", views.avaliar_view, name="confirmar"),
     path("visualizar/<int:pk>", views.visualizar_view, name='visualizar'),
     path("perfil/", views.perfil_view, name='perfil/'),
-    path("alterar_senha/", views.alterar_senha, name='alterar_senha/'),
+    path("alterar_senha/", views.alterar_senha_view, name='alterar_senha/'),
     path("pedidos/", views.pedidos_view, name='pedidos/'),
-    path("enderecos/", views.enderecos_view, name='enderecos/')
+    path("enderecos/", views.enderecos_view, name='enderecos/'),
+    path("entrega/", views.entrega_view, name="entrega/")
 ]
 
 if settings.DEBUG:

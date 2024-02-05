@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Django Ecommerce {% endblock %}
+
+{% block content %}
+<style>
+    .quantity {
+        display: flex;
+        align-items: center;
+    }
+    
+    input[type="number"] {
+        width: 40px;
+        text-align: center;
+        margin: 0 5px;
+        /* Ocultar as setas padrão do input[type="number"] */
+        -moz-appearance: textfield;
+        border: none;
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    /* Estilizar os botões */
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    /* Estilo personalizado para o botão */
+    .btn-custom {
+        background-color: #fff; /* Fundo branco */
+        color: #000; /* Letras pretas */
+        border: 1px solid #000; /* Borda preta */
+        transition: background-color 0.3s, color 0.3s; /* Transição suave ao passar o mouse */
+    }
+    
+    .btn-custom:hover {
+        background-color: #000; /* Fundo preto ao passar o mouse */
+        color: #fff; /* Letras brancas ao passar o mouse */
+    }
+    
+</style>
+
+
+    <!-- ***** Main Banner Area Start ***** -->
+    <!--
+    <div class="page-heading" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-content">
+                        <h2>Single Product Page</h2>
+                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+    <!-- ***** Main Banner Area End ***** -->
+
+
+    <!-- ***** Product Area Starts ***** -->
+    <div class="row-fluid pb-3">
+        <section class="section pt-5 mt-5">
+            <div class="container pt-2">
+                <form method="POST" action="entrega/">                    
+                    <div class="form-group">
+                      <label for="exampleFormControlSelect1">Escolha o endereço de entrega:</label>
+                      <select class="form-control w-25" id="exampleFormControlSelect1">
+                        {% for endereco in enderecos %}
+                            <option>{{ endereco.logradouro }}</option>                        
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <div class="row pt-3 justify-content-between">
+                    <a class="btn btn-dark"href="#">Voltar</a>
+                    {% if valor_frete %}
+                        <a class="btn btn-success" href="#">Avançar</a>
+                    {% else %}
+                        <a class="btn btn-success disabled" href="#">Avançar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+                                
+    
+                                
+                    
+
+{% endblock content %}
+    
