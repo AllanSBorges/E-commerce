@@ -26,6 +26,10 @@ def login_view(request):
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod}
     
+    if ('next' in request.GET) and request.user.is_authenticated:
+        proxima_pagina = request.GET['next']
+        return redirect(proxima_pagina)
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -66,11 +70,19 @@ def signup_view(request):
         logradouro = request.POST['logradouro']
         complemento = request.POST['complemento']
         cidade = request.POST['cidade']
-        numero = request.POST['numero']
-        cep = request.POST['cep']
+        numero = int(request.POST['numero'])
+        cep = int(request.POST['cep'])
+        estado = request.POST['estado']
 
         usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p)
         usuario.save()
+        endereco = Address.objects.create(cep = cep, logradouro = logradouro,
+                                          complemento = complemento,
+                                          numero = numero,
+                                          cidade = cidade,
+                                          estado = estado,
+                                          user_id=usuario)
+        endereco.save()
         return render(request,'signup.html',context)
 
 
@@ -182,6 +194,11 @@ def entrega_view(request):
 
     categorias = Category.objects.all()
     enderecos = Address.objects.filter(user_id=request.user)
+
+    if request.method == "POST":
+        pass
+        
+    
 
 
     context = {
@@ -402,10 +419,8 @@ def visualizar_view(request, pk):
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
     product = Product.objects.get(pk=pk)
-
-    context = {'categorias': categorias,
+    context = { 'categorias': categorias,
                 'qtd_prod': qtd_prod,
                 'product': product }
 
     return render(request, 'visualizar.html',context )
-

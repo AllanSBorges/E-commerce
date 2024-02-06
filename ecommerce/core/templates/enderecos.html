@@ -7,8 +7,8 @@
     <!-- ***** Product Area Starts ***** -->
   <section class="section pt-5" >
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
                 <!-- Conteúdo centralizado aqui -->
                 {% if user.is_authenticated %}
 
@@ -16,36 +16,37 @@
                     <div class="container">
                         <form method="post" action="{% url 'enderecos/' %}">
                           {% csrf_token %}                   
-                        <div class="accordion" id="accordionExample">
-                           {{ formset.management_form }}
-                           {% for form in formset.forms %}
+                            <div class="accordion" id="accordionExample">
+                              {{ formset.management_form }}
+                              {% for form in formset.forms %}
                               <div class="card">
-                                  <div class="card-header" id="headingOne">
-                                    <h2 class="mb-0">
-                                      <button class="btn btn-dark btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
-                                        Endereço #{{ forloop.counter }}
-                                      </button>
-                                    </h2>
-                                </div>
-                              
-                                  <div id="collapse{{ forloop.counter }}" class="collapse show" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                      {{ form.as_table }}
-                                    </div>
-                                  </div>
+                                      <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                          <button class="btn btn-dark btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                            Endereço #{{ forloop.counter }}
+                                          </button>
+                                        </h2>
+                                      </div>
+                                  
+                                      <div id="collapse{{ forloop.counter }}" class="collapse show" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                          {{ form.as_table }}
+                                        </div>
+                                      </div>
                               </div>
-                           {% endfor %}                            
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                      <input class="btn btn-dark mt-2" type="submit" value="Salvar">
-                    </div>
-                  </form>
+                              {% endfor %}                            
+                            </div>
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <input class="btn btn-dark mt-2" type="submit" value="Salvar">
+                          </div>
+                        </form>
+                     </div>
                 {% endif %}          
-            </div>
+
         </div>
+      </div>
     </div>
-  </div>
 
   </section>
 

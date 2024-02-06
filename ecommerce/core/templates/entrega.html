@@ -75,17 +75,57 @@
     <div class="row-fluid pb-3">
         <section class="section pt-5 mt-5">
             <div class="container pt-2">
-                <form method="POST" action="entrega/">                    
-                    <div class="form-group">
-                      <label for="exampleFormControlSelect1">Escolha o endereço de entrega:</label>
-                      <select class="form-control w-25" id="exampleFormControlSelect1">
-                        {% for endereco in enderecos %}
-                            <option>{{ endereco.logradouro }}</option>                        
-                        {% endfor %}
-                      </select>
+                <div class="table-responsive">
+                    <table class="table table-bordered mt-2">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col">Nome do Produto</th>
+                                <th scope="col">Preço</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Subtotal</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chave, valor in pedido.items %}
+                                <tr id="linha{{ forloop.counter }}">
+                                    <td class="text-center">{{ forloop.counter }}</td>
+                                    <td>{{ valor.nome }}</td>
+                                    <td>$<input type="number" class="input-text qty text" id="preco{{ forloop.counter }}" value="{{ valor.preco|floatformat:2 }}" pattern="" inputmode="" readonly style="width: 100px;" disabled></td>
+                                    <td>
+                                        <div class="quantity buttons_added">
+                                            <input type="button" value="-" class="minus" onclick="decrement({{ forloop.counter }})">
+                                            <input type="number" step="1" min="1" max="" name="quantity{{ forloop.counter }}" value="{{ valor.quantidade }}" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity{{ forloop.counter }}" onchange="updateTotal({{ forloop.counter }})" disabled>
+                                            <input type="button" value="+" class="plus" onclick="increment({{ forloop.counter }})">
+                                        </div>
+                                    </td>
+                                    <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>                                    
+                                </tr>
+                                <input type="hidden" name="num" value="{{ forloop.revcounter }}">
+                            {% endfor %}                                
+                        </tbody>
+                    </table>
+                </div>
+                {% if valor_frete %}
+                    <div class="row pt-2">
+
+
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                {% endif %}
+                <div class="row pt-2">
+                    <form method="POST" action="/entrega/">
+                        {% csrf_token %}                    
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Escolha o endereço de entrega:</label>
+                            <select class="form-control w-75" id="exampleFormControlSelect1">
+                                {% for endereco in enderecos %}
+                                    <option>{{ endereco.logradouro }}</option>                        
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Calcular Frete</button>
+                    </form>
+                </div>
                 <div class="row pt-3 justify-content-between">
                     <a class="btn btn-dark"href="#">Voltar</a>
                     {% if valor_frete %}
