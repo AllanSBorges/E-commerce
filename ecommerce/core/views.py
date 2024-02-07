@@ -19,7 +19,7 @@ dados = {"loja_nome": 'Hexashop',
          "loja_end2": 'North Miami Beach',
          }
 
-def dados_nav():
+def dados_nav(request):
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
@@ -34,13 +34,7 @@ def dados_nav():
 
 
 def login_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod,
-               'dados': dados}
+    context = dados_nav(request)
     
     if ('next' in request.GET) and request.user.is_authenticated:
         proxima_pagina = request.GET['next']
@@ -64,7 +58,7 @@ def login_view(request):
     
 def logout_view(request):
     logout(request)
-    return redirect('page')
+    return redirect('page/')
     
 
 def signup_view(request):

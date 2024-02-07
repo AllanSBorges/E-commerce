@@ -16,7 +16,18 @@ class Customer(AbstractUser):
     
     def __str__(self):
         return self.first_name
-   
+
+class Subscriber(models.Model):
+    subscriber_name = models.CharField(max_length = 30, verbose_name='Inscrito')
+    subscriber_email = models.EmailField()
+
+    class Meta:
+        verbose_name = 'Inscrito'
+        verbose_name_plural = 'Inscritos'
+        ordering = ['subscriber_name']
+    
+    def __str__(self):
+        return self.subscriber_name
 
 class Product(models.Model):
     product_name = models.CharField(max_length = 30, verbose_name='Produto')

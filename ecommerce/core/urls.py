@@ -5,11 +5,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index_view, name="page"),
-    path("page/<int:year>/<int:month>", views.dois, name="dois"),
+    path("", views.index_view, name="page/"),
+    path("page/<int:year>/<int:month>", views.dois, name="dois"), # Remover ...
     path("single-product/<int:pk>", views.product_view, name="single-product"),
-    path("page/", views.dois, name="dois"),
-    path("now/", views.time_now, name="time"),
+    path("page/", views.dois, name="dois"), # Remover ...
+    path("now/", views.time_now, name="time"), # Remover ...
     path("order/", views.order_view, name="order"),
     path("login/", views.login_view, name="login"),
     path("signup/", views.signup_view, name="signup"),
