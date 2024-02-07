@@ -1,9 +1,7 @@
 from django.http import HttpResponse
-
 from .models import Category, Product, Customer, Avaliacao, Address
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-
 from django.contrib import messages
 from django.db import Error
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -13,6 +11,23 @@ from django.forms import modelformset_factory
 from .forms import AddressForm
 from random import sample
 import datetime
+
+dados = {"loja_nome": 'Hexashop',
+         "loja_email": 'sac@hexashop.com',
+         "loja_tel": '010-020-0340',
+         "loja_end": '16501 Collins Ave, Sunny Isles Beach, FL 33160, United States',
+         "loja_end2": 'North Miami Beach',
+         }
+
+def dados_nav():
+    categorias = Category.objects.all()
+    carrinho = request.session.get('cart', {})
+    qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod,
+               'dados': dados}
+    return context
 
 # Create your views here.
 
@@ -24,7 +39,8 @@ def login_view(request):
     qtd_prod = len(carrinho)
 
     context = {'categorias': categorias,
-               'qtd_prod': qtd_prod}
+               'qtd_prod': qtd_prod,
+               'dados': dados}
     
     if ('next' in request.GET) and request.user.is_authenticated:
         proxima_pagina = request.GET['next']
@@ -58,7 +74,8 @@ def signup_view(request):
 
 
     context = {'categorias': categorias,
-               'qtd_prod': qtd_prod }
+               'qtd_prod': qtd_prod,
+               'dados': dados }
 
     if request.method == 'POST':
         f_name = request.POST['first-name']
@@ -96,6 +113,10 @@ def perfil_view(request):
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
 
+    context = {'categorias': categorias,
+               'qtd_prod': qtd_prod,
+               'dados': dados }
+
     if request.method == "POST":
         nome = request.POST['first-name']
         sobrenome = request.POST['last-name']
@@ -108,8 +129,7 @@ def perfil_view(request):
         except Error:
             messages.error(request, "Ops. Um erro ocorreu.")
 
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod}
+    
 
     return render(request,'perfil.html', context)
     
@@ -119,6 +139,10 @@ def alterar_senha_view(request):
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
+
+    context = {'categorias': categorias,               
+               'qtd_prod': qtd_prod,
+               'dados': dados }
 
     if request.method == "POST":
         senha_atual = request.POST['senha-atual']
@@ -135,8 +159,7 @@ def alterar_senha_view(request):
         else:
             messages.error(request, "Algo de errado ocorreu. Tente novamente...")
 
-    context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod}
+    
         
     return render(request,'alterar.html', context)
 
@@ -147,7 +170,8 @@ def pedidos_view(request):
     qtd_prod = len(carrinho)
 
     context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod}
+               'qtd_prod': qtd_prod,
+               'dados': dados }
 
 
     return render(request,'pedidos.html', context)
@@ -159,7 +183,8 @@ def enderecos_view(request):
     qtd_prod = len(carrinho)
 
     context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod }
+               'qtd_prod': qtd_prod,
+               'dados': dados }
     
 
     AddressFormSet = modelformset_factory(Address, form=AddressForm, extra=1)
@@ -195,6 +220,11 @@ def entrega_view(request):
     categorias = Category.objects.all()
     enderecos = Address.objects.filter(user_id=request.user)
 
+    total = request.session.get('total', 0 )
+
+    if total != 0:
+        pass
+
     if request.method == "POST":
         pass
         
@@ -204,7 +234,8 @@ def entrega_view(request):
     context = {
         'categorias': categorias,
         'qtd_prod': qtd_prod,
-        'enderecos': enderecos
+        'dados': dados,
+        'enderecos': enderecos,
     }
 
     return render(request, 'entrega.html', context)
@@ -235,7 +266,8 @@ def index_view(request):
     context= {'lista': lista,
               'escolhidas': escolhidas,
               'categorias': categorias,
-              'qtd_prod': qtd_prod}
+              'qtd_prod': qtd_prod,
+              'dados': dados}
         
         
     
@@ -249,7 +281,8 @@ def product_view(request,pk):
     prod = Product.objects.get(pk=pk)
     context = {'product': prod,
                'categorias': categorias,
-               'qtd_prod': qtd_prod }    
+               'qtd_prod': qtd_prod,
+               'dados': dados }    
     return render(request,'single-product.html',context)
 
 def dois(request,year=2000,month=1):
@@ -297,19 +330,24 @@ def order_view(request):
 
         # Atualize a sessão com o carrinho modificado
         request.session['cart'] = carrinho
+        
+        
 
     # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
     pedido = request.session.get('cart', {})
-    total = 0
+    total = float(request.session.get('total', 0))
     
     for prod in pedido.keys():
         total += float(pedido[prod]['subtotal'])
+
+    request.session['total'] = total
 
     qtd_prod = len(carrinho)
     context = {'pedido' : pedido,
                'categorias' :categorias,
                'total': total,
-               'qtd_prod': qtd_prod }
+               'qtd_prod': qtd_prod,
+               'dados': dados }
     
     
     return render(request,'order.html', context)
@@ -340,7 +378,8 @@ def confirmar_view(request):
   
 
     context = {'categorias': categorias,
-               'qtd_prod': qtd_prod }
+               'qtd_prod': qtd_prod,
+               'dados': dados }
     return render(request,'confirmar.html', context)
 
 def category_view(request, pk):
@@ -369,7 +408,8 @@ def category_view(request, pk):
                'categoria': categoria,
                'produtos': produtos_da_categoria,
                'itens_paginados': itens_paginados,
-               'qtd_prod': qtd_prod}
+               'qtd_prod': qtd_prod,
+               'dados': dados}
     print(context)
     return render(request,'products.html', context)
 
@@ -379,7 +419,8 @@ def categories_view(request):
      qtd_prod = len(carrinho)
 
      context = {'categorias': categorias,
-                'qtd_prod': qtd_prod }
+                'qtd_prod': qtd_prod,
+                'dados': dados }
 
      return render(request, 'categorias.html',context )
 
@@ -392,7 +433,8 @@ def avaliar_view(request, pk):
 
     context = {'categorias': categorias,
                 'qtd_prod': qtd_prod,
-                'product': product }
+                'product': product,
+                'dados': dados }
     
     if request.method == "POST":
         nota = int(request.POST['nota'])
@@ -421,6 +463,7 @@ def visualizar_view(request, pk):
     product = Product.objects.get(pk=pk)
     context = { 'categorias': categorias,
                 'qtd_prod': qtd_prod,
-                'product': product }
+                'product': product,
+                'dados': dados }
 
     return render(request, 'visualizar.html',context )
