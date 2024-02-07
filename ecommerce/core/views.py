@@ -62,14 +62,7 @@ def logout_view(request):
     
 
 def signup_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    context = dados_nav(request)  
 
     if request.method == 'POST':
         f_name = request.POST['first-name']
@@ -103,13 +96,7 @@ def signup_view(request):
 
 @login_required(login_url='/login/')
 def perfil_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    context = dados_nav(request)
 
     if request.method == "POST":
         nome = request.POST['first-name']
@@ -130,13 +117,7 @@ def perfil_view(request):
 
 @login_required(login_url='/login/')
 def alterar_senha_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    context = dados_nav(request)
 
     if request.method == "POST":
         senha_atual = request.POST['senha-atual']
@@ -159,26 +140,13 @@ def alterar_senha_view(request):
 
 @login_required(login_url='/login/')
 def pedidos_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod,
-               'dados': dados }
-
-
-    return render(request,'pedidos.html', context)
+   context = dados_nav(request)
+   
+   return render(request,'pedidos.html', context)
 
 @login_required(login_url='/login/')
 def enderecos_view(request):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    context = {'categorias': categorias,               
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    context = dados_nav(request)
     
 
     AddressFormSet = modelformset_factory(Address, form=AddressForm, extra=1)
@@ -208,10 +176,7 @@ def enderecos_view(request):
 
 @login_required(login_url='/login/')
 def entrega_view(request):
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-
-    categorias = Category.objects.all()
+    context = dados_nav(request)
     enderecos = Address.objects.filter(user_id=request.user)
 
     total = request.session.get('total', 0 )
@@ -225,19 +190,14 @@ def entrega_view(request):
     
 
 
-    context = {
-        'categorias': categorias,
-        'qtd_prod': qtd_prod,
-        'dados': dados,
-        'enderecos': enderecos,
-    }
+    context.setdefault('enderecos', enderecos)
+    
 
     return render(request, 'entrega.html', context)
 
 
 def index_view(request):
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    context = dados_nav(request)
 
     categorias = Category.objects.all()
     lista = []
@@ -257,26 +217,20 @@ def index_view(request):
         if produtos_da_categoria:
             lista.append((categoria,produtos_da_categoria))
     
-    context= {'lista': lista,
-              'escolhidas': escolhidas,
-              'categorias': categorias,
-              'qtd_prod': qtd_prod,
-              'dados': dados}
+    context.setdefault('lista', lista)
+    context.setdefault('escolhidas', escolhidas)
+              
         
         
     
     return render(request, 'index.html', context )
 
 def product_view(request,pk):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    context = dados_nav(request)
 
     prod = Product.objects.get(pk=pk)
-    context = {'product': prod,
-               'categorias': categorias,
-               'qtd_prod': qtd_prod,
-               'dados': dados }    
+    context.setdefault('product', prod)
+                   
     return render(request,'single-product.html',context)
 
 def dois(request,year=2000,month=1):
@@ -290,11 +244,7 @@ def time_now(request):
 
 
 def order_view(request):
-   
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    
-    
+
     if request.method == 'POST':
         produto = request.POST['product_name']
         quantidade = request.POST['quantity']
@@ -335,13 +285,12 @@ def order_view(request):
         total += float(pedido[prod]['subtotal'])
 
     request.session['total'] = total
+    context = dados_nav(request)
 
-    qtd_prod = len(carrinho)
-    context = {'pedido' : pedido,
-               'categorias' :categorias,
-               'total': total,
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    
+    context.setdefault('pedido', pedido)
+    context.setdefault('total', total)
+               
     
     
     return render(request,'order.html', context)
@@ -349,11 +298,7 @@ def order_view(request):
 
 @login_required(login_url='/login/')
 def confirmar_view(request):
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
-    categorias = Category.objects.all()
-
-    
+    context = dados_nav(request)    
 
     if request.method == "POST":
         
@@ -362,7 +307,7 @@ def confirmar_view(request):
             print(key, value)
         while True:
             quantidade = "quantity"+str(i)
-            print('aa')
+            
             if request.POST.get(quantidade):
                 print(request.POST.get(quantidade))
             else:
@@ -371,15 +316,12 @@ def confirmar_view(request):
         
   
 
-    context = {'categorias': categorias,
-               'qtd_prod': qtd_prod,
-               'dados': dados }
+    
     return render(request,'confirmar.html', context)
 
 def category_view(request, pk):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    context = dados_nav(request)
+    
 
     categoria = Category.objects.get(pk=pk)
     produtos_da_categoria = categoria.productcategory_set.all()
@@ -398,37 +340,25 @@ def category_view(request, pk):
         itens_paginados = paginator.page(paginator.num_pages)
 
 
-    context = {'categorias': categorias,
-               'categoria': categoria,
-               'produtos': produtos_da_categoria,
-               'itens_paginados': itens_paginados,
-               'qtd_prod': qtd_prod,
-               'dados': dados}
-    print(context)
+    context.setdefault('categoria', categoria)
+    context.setdefault('produtos', produtos_da_categoria)
+    context.setdefault('itens_paginados', itens_paginados)
+               
+    
     return render(request,'products.html', context)
 
 def categories_view(request):
-     categorias = Category.objects.all()
-     carrinho = request.session.get('cart', {})
-     qtd_prod = len(carrinho)
-
-     context = {'categorias': categorias,
-                'qtd_prod': qtd_prod,
-                'dados': dados }
+     context = dados_nav(request)
 
      return render(request, 'categorias.html',context )
 
 @login_required(login_url='/login/')
 def avaliar_view(request, pk):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    context = dados_nav(request)
     product = Product.objects.get(pk=pk)
 
-    context = {'categorias': categorias,
-                'qtd_prod': qtd_prod,
-                'product': product,
-                'dados': dados }
+    context.setdefault('product', product)
+                
     
     if request.method == "POST":
         nota = int(request.POST['nota'])
@@ -451,13 +381,7 @@ def avaliar_view(request, pk):
     return render(request, 'avaliar.html',context )
 
 def visualizar_view(request, pk):
-    categorias = Category.objects.all()
-    carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    context = dados_nav(request)
     product = Product.objects.get(pk=pk)
-    context = { 'categorias': categorias,
-                'qtd_prod': qtd_prod,
-                'product': product,
-                'dados': dados }
-
+    context.setdefault('product', product)                
     return render(request, 'visualizar.html',context )
