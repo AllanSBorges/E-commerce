@@ -11,13 +11,16 @@ from django.forms import modelformset_factory
 from .forms import AddressForm
 from random import sample
 import datetime
+import requests
 
 dados = {"loja_nome": 'Hexashop',
+         "loja_cnpj": '01.304.648/0001-14',
+         "loja_razao_social": 'Hexashop LTDA',
          "loja_email": 'sac@hexashop.com',
          "loja_tel": '010-020-0340',
          "loja_end": '16501 Collins Ave, Sunny Isles Beach, FL 33160, United States',
          "loja_end2": 'North Miami Beach',
-         }
+         } # Dicionário alteração dos dados da loja (obs. Poderia ser uma entidade no banco de dados.)
 
 def dados_nav(request):
     categorias = Category.objects.all()
@@ -185,7 +188,9 @@ def entrega_view(request):
         pass
 
     if request.method == "POST":
-        pass
+        escolhido = request.POST['escolhido']
+        print(escolhido)
+        context.setdefault('escolhido', escolhido)
         
     
 
@@ -207,7 +212,11 @@ def index_view(request):
         aux.append(i)
     
     if aux:
-        escolhidas = sample(aux,4) 
+        if len(aux) < 4:
+            num = len(aux)
+        else:
+            num = 4
+        escolhidas = sample(aux,num) 
     else:
         escolhidas = []
 
@@ -279,7 +288,7 @@ def order_view(request):
 
     # Obtém os dados do cookie "cart" ou uma lista vazia se o cookie não existir
     pedido = request.session.get('cart', {})
-    total = float(request.session.get('total', 0))
+    total = 0
     
     for prod in pedido.keys():
         total += float(pedido[prod]['subtotal'])

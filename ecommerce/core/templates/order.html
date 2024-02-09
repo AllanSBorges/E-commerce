@@ -101,14 +101,14 @@
                                                 <td>$<input type="number" class="input-text qty text" id="preco{{ forloop.counter }}" value="{{ valor.preco|floatformat:2 }}" pattern="" inputmode="" readonly style="width: 100px;" disabled></td>
                                                 <td>
                                                     <div class="quantity buttons_added">
-                                                        <input type="button" value="-" class="minus" onclick="decrement({{ forloop.counter }})">
+                                                        
                                                         <input type="number" step="1" min="1" max="" name="quantity{{ forloop.counter }}" value="{{ valor.quantidade }}" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" id="quantity{{ forloop.counter }}" onchange="updateTotal({{ forloop.counter }})" disabled>
-                                                        <input type="button" value="+" class="plus" onclick="increment({{ forloop.counter }})">
+                                                        
                                                     </div>
                                                 </td>
                                                 <td>$<span id="subtotal{{ forloop.counter }}">{{ valor.subtotal|floatformat:2 }}</span></td>
                                                 <td class="d-flex justify-content-center">
-                                                    <a href="../single-product/{{ chave }}" class="btn btn-dark float-left">Alterar qunatidade</a>
+                                                    <a href="../single-product/{{ chave }}" class="btn btn-dark float-left">Alterar</a>
                                                 </td>
                                             </tr>
                                             <input type="hidden" name="num" value="{{ forloop.revcounter }}">

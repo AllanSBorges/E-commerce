@@ -50,24 +50,11 @@ button:hover {
 }
 
 </style>
-     <!-- ***** Main Banner Area Start ***** -->
-     <div class="page-heading" id="top" style="display: none"> <!-- Oculto do Usuário-->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="inner-content">
-                        <h2>Single Product Page</h2>
-                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ***** Main Banner Area End ***** -->
+     
 
     
     <!-- ***** Product Area Starts ***** -->
-    <section class="section" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
+    <section class="section pt-5" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
         <form method="POST" action="{% url 'order' %}">
             {% csrf_token %}
             <div class="container">

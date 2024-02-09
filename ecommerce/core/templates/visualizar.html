@@ -50,24 +50,11 @@ button:hover {
 }
 
 </style>
-     <!-- ***** Main Banner Area Start ***** -->
-     <div class="page-heading" id="top" style="display: none"> <!-- Oculto do Usuário-->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="inner-content">
-                        <h2>Single Product Page</h2>
-                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ***** Main Banner Area End ***** -->
+    
 
     
     <!-- ***** Product Area Starts ***** -->
-    <section class="section" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
+    <section class="section pt-5" id="product"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
              <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
@@ -86,12 +73,25 @@ button:hover {
                             <li><i class="fa fa-star"></i></li>
                             <li><i class="fa fa-star"></i></li>
                         </ul>
-                        <span>{{ product.product_description }}</span>
+                        <span>Descrição: {{ product.product_description }}</span>
+                        <span>Peso líquido (em kg): {{ product.product_netweight }} </span>
+                        <span>Peso bruto (em kg): {{ product.product_weight }} </span>
+                        <span>Altura (em cm): {{ product.product_height }} </span>
+                        <span>Largura (em cm): {{ product.product_width }} </span>
+                        <span>Comprimento (em cm): {{ product.product_length }} </span>
+                        <div class="row mt-4 d-flex justify-content-center">
+                            <a class="btn btn-dark mx-2" href="../avaliar/{{ product.id }}"><i class="fa fa-star"></i></a>
+                            <a class="btn btn-dark mx-2" href="../single-product/{{ product.id }}"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
                         
                     </div>
                 </div>
                 
+            
+                
             </div>
+            
+            
             <div class="d-flex justify-content-center">
                 <a href="/" class="btn btn-dark">Voltar</a>
             </div>
