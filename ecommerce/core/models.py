@@ -125,11 +125,15 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.logradouro}, {self.complemento}, {self.numero}, {self.cidade}, {self.cep},  {self.estado}"
 
-class Avaliacao(models.Model):
+class Evaluation(models.Model):
     customer_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
     product_id = models.ForeignKey("Product", on_delete=models.CASCADE)
-    avaliacao = models.CharField(max_length = 30, blank=True, null=True)
+    avaliacao = models.CharField(max_length = 30, blank=True, null=True, verbose_name = "Avaliação")
     nota = models.IntegerField()
+
+    class Meta:
+        # restrição única para evitar avaliações duplicadas pelo mesmo usuário para o mesmo produto
+        unique_together = ('customer_id', 'product_id') # Pode deixar descontinuada no futuro
 
 
 class Discount(models.Model):

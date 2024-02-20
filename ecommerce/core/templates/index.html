@@ -28,30 +28,33 @@
 
                 <div class="col-lg-6">
                     <div class="right-content">
-                        <div class="row">
-                            {% for escolhida in escolhidas %}
+                        <div class="row">                                                     
+                            {% for escolhida in escolhidas %}                        
                                 <div class="col-lg-6">
                                     <div class="right-first-image">
                                         <div class="thumb">
+                                            
                                             <div class="inner-content">
-                                                <h4>{{ escolhida.category_name }}</h4>
-                                                <span>{{ escolhida.category_breve }}</span>
+                                                <h4>{{ escolhida.category_name|safe }}</h4>
+                                                <span>{{ escolhida.category_breve|safe }}</span>
                                             </div>
                                             <div class="hover-content">
                                                 <div class="inner">
-                                                    <h4>{{ escolhida.category_name }}</h4>
-                                                    <p>{{ escolhida.category_description }}</p>
+                                                    <h4>{{ escolhida.category_name|safe }}</h4>
+                                                    <p>{{ escolhida.category_description|safe }}</p>
                                                     <div class="main-border-button">
-                                                        <a href="../category/{{ escolhida.id }}">Discover More</a>
+                                                        <a href="../category/{{ escolhida.id|safe }}">Saiba Mais</a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <img src="{{ escolhida.category_image.url }}">
+                                            <img src="{{ escolhida.category_image.url|safe }}">
                                         </div>
+                                          
                                     </div>
-                                </div>
+                                </div>                        
                             {% endfor %}
                         </div>
+                            
                     </div>
                 </div>
             </div>
@@ -67,8 +70,8 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="section-heading mb-3">
-                            <h2>{{ categoria.category_name }}</h2>
-                            <span>{{ categoria.category_breve }}</span>
+                            <h2>{{ categoria.category_name|safe }}</h2>
+                            <span>{{ categoria.category_breve|safe }}</span>
                         </div>
                     </div>
                 </div>
@@ -93,8 +96,8 @@
                                             <img src="{{ produto_categoria.product_id.product_image.url }}" alt="">
                                         </div>
                                         <div class="down-content">
-                                            <h4>{{ produto_categoria.product_id.product_name }}</h4>
-                                            <span>{{ produto_categoria.product_id.product_price|floatformat:2 }}</span>
+                                            <h4>{{ produto_categoria.product_id.product_name|safe }}</h4>
+                                            <span>{{ produto_categoria.product_id.product_price|floatformat:2|safe }}</span>
                                             <ul class="stars">
                                                 <li><i class="fa fa-star-half"></i></li>
                                                 <li><i class="fa fa-star"></i></li>

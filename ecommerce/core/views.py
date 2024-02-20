@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import Category, Product, Customer, Avaliacao, Address
+from .models import Category, Product, Customer, Evaluation, Address
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -191,7 +191,8 @@ def entrega_view(request):
         escolhido = request.POST['escolhido']
         print(escolhido)
         context.setdefault('escolhido', escolhido)
-        
+    else:
+        escolhido = ""    
     
 
 
@@ -369,23 +370,38 @@ def avaliar_view(request, pk):
     context.setdefault('product', product)
                 
     
+    user_id = int(request.user.id)
+    cliente = Customer.objects.get(pk=user_id)
+    obj = Evaluation.objects.get(product_id = product, customer_id = cliente )
+    if obj:
+        context.setdefault('nota', obj.nota)
+        context.setdefault('avaliacao', obj.avaliacao)
+    else:
+        context.setdefault('nota', 5)
+        context.setdefault('avaliacao', '')
+
+
     if request.method == "POST":
         nota = int(request.POST['nota'])
         avaliacao = request.POST['avaliacao']
-        print(nota,avaliacao, sep=':')
-        print(request.POST)
+        
 
         product_id = Product.objects.get(pk=pk)
         user_id = int(request.user.id)
         cliente = Customer.objects.get(pk=user_id)
         
+        
         try:
-            obj = Avaliacao.objects.create(customer_id = cliente, product_id = product_id ,avaliacao = avaliacao, nota = nota)
-            obj.save()
+            Evaluation.objects.update_or_create(customer_id = cliente, product_id = product_id,                                                 
+                                                defaults = {'customer_id':cliente,
+                                                            'product_id': product_id,
+                                                            'avaliacao': avaliacao,
+                                                            'nota': nota})            
             messages.success(request, "Agradecemos sua por sua avaliação.")
 
         except Error:
             messages.error(request, "Ops. Algo deu errado.\nTente realizar sua avaliação novamente.\n")
+        
                                           
     return render(request, 'avaliar.html',context )
 
