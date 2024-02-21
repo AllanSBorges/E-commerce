@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import Category, Product, Customer, Evaluation, Address
+from .models import Category, Product, Customer, Evaluation, Address, Order, OrderProduct
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -144,7 +144,26 @@ def alterar_senha_view(request):
 @login_required(login_url='/login/')
 def pedidos_view(request):
    context = dados_nav(request)
-   
+
+   user_id = int(request.user.id)
+   cliente = Customer.objects.get(pk = user_id)
+   print(cliente.first_name)
+   pedidos = Order.objects.filter(order_client = cliente)
+
+   # Configurar a paginação
+   if pedidos:
+       paginator = Paginator(pedidos, 12)  # 12 itens por página
+       page = request.GET.get('page')
+       try:
+           itens_paginados = paginator.page(page)
+       except PageNotAnInteger:
+           # Se a página não é um número inteiro, exibir a primeira página
+           itens_paginados = paginator.page(1)
+       except EmptyPage:
+           # Se a página está fora do intervalo (e.g., 9999), exibir a última página
+           itens_paginados = paginator.page(paginator.num_pages)
+        
+       context.setdefault('itens_paginados')
    return render(request,'pedidos.html', context)
 
 @login_required(login_url='/login/')
