@@ -5,29 +5,18 @@
 {% block content %}
 
     <!-- ***** Main Banner Area Start ***** -->
-    <div class="page-heading" id="top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="inner-content">
-                        <h2>{{ categoria.category_name}}</h2>
-                        <span>{{ categoria.category_breve }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <!-- ***** Main Banner Area End ***** -->
 
 
     <!-- ***** Products Area Starts ***** -->
     <section class="section" id="products">
         <div class="container">
-            <div class="row">
+            <div class="row pt-4">
                 <div class="col-lg-12">
                     <div class="section-heading">
-                        <h2>Our Latest Products</h2>
-                        <span>Check out all of our products.</span>
+                        <h2>{{ categoria.category_name }}</h2>
+                        <span>{{ categoria.category_breve }}</span>
                     </div>
                 </div>
             </div>
@@ -40,7 +29,7 @@
                         <div class="thumb">
                             <div class="hover-content">
                                 <ul>
-                                    <li><a href="../avaliar/{{ item.product_id.id }}"><i class="fa fa-eye"></i></a></li>
+                                    <li><a href="../visualizar/{{ item.product_id.id }}"><i class="fa fa-eye"></i></a></li>
                                     <li><a href="../avaliar/{{ item.product_id.id }}"><i class="fa fa-star"></i></a></li>
                                     <li><a href="../single-product/{{ item.product_id.id }}"><i class="fa fa-shopping-cart"></i></a></li>
                                 </ul>

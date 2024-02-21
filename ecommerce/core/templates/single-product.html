@@ -108,17 +108,17 @@ button:hover {
     <script>
         function updateTotal() {
             var quantityInput = document.getElementById('quantity');
-            var currentValue = parseInt(quantityInput.value, 10);
-            var productPrice = parseFloat('{{ product.product_price }}'); // Substitua por como você está obtendo o preço do produto
-            var total = currentValue * productPrice;
-    
+            var currentValue = parseInt(quantityInput.value);
+            var productPrice = parseFloat('{{ product.product_price }}'.replace(',','.'));
+            var total = productPrice * currentValue;
+            
             // Atualizar o conteúdo do elemento "total"
             document.getElementById('total').innerHTML = total.toFixed(2);
         }
     
         function increment() {
             var quantityInput = document.getElementById('quantity');
-            var currentValue = parseInt(quantityInput.value, 10);
+            var currentValue = parseInt(quantityInput.value);
             quantityInput.value = currentValue + 1;
     
             // Chamar a função para atualizar o total
@@ -127,7 +127,7 @@ button:hover {
     
         function decrement() {
             var quantityInput = document.getElementById('quantity');
-            var currentValue = parseInt(quantityInput.value, 10);
+            var currentValue = parseInt(quantityInput.value);
     
             // Certifique-se de que a quantidade não seja menor que 1
             if (currentValue > 0) {

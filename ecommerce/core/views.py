@@ -181,6 +181,8 @@ def enderecos_view(request):
 def entrega_view(request):
     context = dados_nav(request)
     enderecos = Address.objects.filter(user_id=request.user)
+    if not enderecos:
+        messages.warning(request, "Por favor cadastre pelo menos um endereço para a entrega.")
 
     total = request.session.get('total', 0 )
 
@@ -188,7 +190,7 @@ def entrega_view(request):
         pass
 
     if request.method == "POST":
-        escolhido = request.POST['escolhido']
+        escolhido = request.POST.get('escolhido')
         print(escolhido)
         context.setdefault('escolhido', escolhido)
     else:

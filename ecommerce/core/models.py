@@ -35,11 +35,11 @@ class Company(models.Model):
     company_razao_social = models.CharField(max_length = 30, verbose_name='Razão Social')
 
     company_email = models.EmailField()
-    company_phone = models.CharField(max_length = 30, verbose_name='Nome fantasia')
+    company_phone = models.CharField(max_length = 30, verbose_name='Telefone')
     company_store_address = models.CharField(max_length = 30, verbose_name='Endereço da loja')
-    company_store_cep = models.IntegerField(verbose_name='CEP da loja')
+    company_store_cep = models.CharField(max_length = 11, verbose_name='CEP da loja')
     company_office_address = models.CharField(max_length = 30, verbose_name='Endreço do escritório')
-    company_office_cep = models.IntegerField(verbose_name='CEP do escritório')
+    company_office_cep = models.CharField(max_length = 11, verbose_name='CEP do escritório')
 
 
     company_logo_header = models.ImageField(null=True, verbose_name='Logo do Cabeçalho')
