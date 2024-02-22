@@ -14,24 +14,29 @@
 
             <h1>Seja bem vindo {{ user.username }}! </h1>
     
-          {% else %}                 
+          {% else %}
+            {% if tentativas <= 5 %}                 
             
 
-            <h2 class="container pb-1">Login</h2>
-            <div class="container"> 
-                
-                <form method="POST" action="{% url 'login' %}">
-                  {% csrf_token %}
+                <h2 class="container pb-1">Login</h2>
+                <div class="container"> 
+                    
+                    <form method="POST" action="{% url 'login' %}">
+                      {% csrf_token %}
 
-                  <div class='loginform'>
-                    <label for='username'>Login: </lable> <input type='text' id='username' name='username' style="margin-left: 9px;">
+                      <div class='loginform'>
+                        <label for='username'>Login: </lable> <input type='text' id='username' name='username' style="margin-left: 9px;">
+                      </div>
+                      <div class='loginform'>
+                        <label for='password'>Senha: </label> <input type='password' id='password' name='password'>
+                      </div class='loginform'>
+                        <input type='submit' class="btn btn-dark" value='Logar'>
+                    </form>
                   </div>
-                  <div class='loginform'>
-                    <label for='password'>Senha: </label> <input type='password' id='password' name='password'>
-                  </div class='loginform'>
-                    <input type='submit' class="btn btn-dark" value='Logar'>
-                </form>
-              </div>
+            {% else %}
+                <h2 class="container-fluid mx-auto px-auto">Você excedeu o número máximo de tentativas permitidas.</h2>
+
+            {% endif %}
           {% endif %}
           
         </div>

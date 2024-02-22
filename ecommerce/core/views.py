@@ -38,24 +38,31 @@ def dados_nav(request):
 
 def login_view(request):
     context = dados_nav(request)
+    tentativas = int(request.session.get('tentativas', 0))
     
     if ('next' in request.GET) and request.user.is_authenticated:
         proxima_pagina = request.GET['next']
         return redirect(proxima_pagina)
     
     if request.method == 'POST':
+        
         username = request.POST['username']
         password = request.POST['password']
 		# Authenticate
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            tentativas = 0 
+            request.session['tentativas'] = tentativas
             messages.success(request, "Login realizado com sucesso!")
             return redirect(request.META.get('HTTP_REFERER', '/'))
         else:
+            tentativas += 1
+            request.session['tentativas'] = tentativas
             messages.error(request, "Login ou senha inválidos, Por favor tente novamente...")
             return redirect('login')
     else:
+        context.setdefault('tentativas',tentativas)
         return render(request, 'login.html', context)
 
     
@@ -163,7 +170,7 @@ def pedidos_view(request):
            # Se a página está fora do intervalo (e.g., 9999), exibir a última página
            itens_paginados = paginator.page(paginator.num_pages)
         
-       context.setdefault('itens_paginados')
+       context.setdefault('itens_paginados',itens_paginados)
    return render(request,'pedidos.html', context)
 
 @login_required(login_url='/login/')

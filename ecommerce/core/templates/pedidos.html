@@ -7,10 +7,41 @@
             <div class="row">
                 <h3 class="text mx-auto">Seu histórico de pedidos</h3>
             </div>
-            <div class="row">
-                <ul class="list-unstyled">
+            <div class="row pt-2">
+                
 
-                </ul>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Número do Pedido</th>
+                        <th scope="col">Data do Pedido</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Ver detalhes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in itens_paginados %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                     {% endfor %}
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                      </tr>
+                    </tbody>
+                  </table>
             </div>
         </div>
     </div>
