@@ -18,9 +18,20 @@ dados = {"loja_nome": 'Hexashop',
          "loja_razao_social": 'Hexashop LTDA',
          "loja_email": 'sac@hexashop.com',
          "loja_tel": '010-020-0340',
-         "loja_end": '16501 Collins Ave, Sunny Isles Beach, FL 33160, United States',
-         "loja_end2": 'North Miami Beach',
-         } # Dicionário alteração dos dados da loja (obs. Poderia ser uma entidade no banco de dados.)
+         "loja_end":  'Collins Ave, ,  33160, ',
+         "loja_end_num": '16501',
+         "loja_end_bairo": "Sunny Isles Beach",
+         "loja_end_estado": "FL",
+         "loja_end_pais": "United States",
+         "escritorio_email": 'sac@hexashop.com',
+         "escritorio_tel": '010-020-0340',
+         "escritorio_end":  'Collins Ave, ,  33160, ',
+         "escritorio_end_num": '16501',
+         "escritorio_end_bairo": "Sunny Isles Beach",
+         "escritorio_end_estado": "FL",
+         "escritorio_end_pais": "United States",
+
+        } # Dicionário alteração dos dados da loja (obs. Poderia ser uma entidade no banco de dados.)
 
 def dados_nav(request):
     categorias = Category.objects.all()
@@ -32,9 +43,23 @@ def dados_nav(request):
                'dados': dados}
     return context
 
+def media_avaliacao(request,product_id):
+    produto = Product.objects.get(pk = product_id)
+    avaliacoes = Evaluation.objects.filter(produto_id = produto)
+    media = 0
+    if avaliacoes:
+        for avaliacao in avaliacoes:
+            media += avaliacao.nota
+        media = int(media/len(avaliacoes))
+        return media
+    else:
+        return 5
+
 # Create your views here.
 
 
+def pagina_nao_encontrada(request, exception=None):
+    return render(request, '404.html', status=404)
 
 def login_view(request):
     context = dados_nav(request)
@@ -215,10 +240,25 @@ def entrega_view(request):
     if total != 0:
         pass
 
+   
+
+
     if request.method == "POST":
         escolhido = request.POST.get('escolhido')
         print(escolhido)
         context.setdefault('escolhido', escolhido)
+        total_weight = 0
+        total_height = 0
+        total_width = 0
+        total_length = 0
+
+        # Chame a API do Melhor Envio para calcular o frete
+        url = 'https://api.melhorenvio.com.br/v2/calculator'
+        headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
+        payload = {'from': 'CEP_ORIGEM', 'to': escolhido, 'weight': '1', 'height': '10', 'width': '15', 'length': '20'}
+
+        # response = requests.post(url, headers=headers, data=payload)
+        # resultado = response.json()
     else:
         escolhido = ""    
     

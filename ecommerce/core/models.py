@@ -36,11 +36,13 @@ class Product(models.Model):
     product_status = models.BooleanField(verbose_name='Disponível')
     product_image = models.ImageField(null=True, verbose_name='Imagem')
 
+    
     product_netweight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso líquido (em Kg):")
     product_weight = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Peso bruto (em Kg):")
     product_height = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Altura (em cm):")
     product_width = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Largura (em cm):")
     product_length = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Profundidade (em cm):")
+
 
     class Meta:
         verbose_name= 'Produto'

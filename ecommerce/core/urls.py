@@ -4,6 +4,9 @@ from django.conf.urls.static import static
 from django.urls import path
 from . import views
 
+
+
+
 urlpatterns = [
     path("", views.index_view, name="page/"),
     path("page/<int:year>/<int:month>", views.dois, name="dois"), # Remover ...

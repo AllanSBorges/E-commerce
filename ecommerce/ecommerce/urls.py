@@ -21,3 +21,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
 ]
+handler404 = "core.views.pagina_nao_encontrada"

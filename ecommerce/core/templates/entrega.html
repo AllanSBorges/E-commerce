@@ -75,39 +75,49 @@
     <div class="row-fluid pb-3">
         <section class="section pt-5 mt-5">
             <div class="container pt-2">               
-                <div class="row pt-2">
+                {% if enderecos %}
+                                                            
                     
-                    {% if valor_frete %}
-
-                    {% endif %}
-                </div>                
-                <div class="row pt-2">
-                    <form method="POST" action="/entrega/">
-                        {% csrf_token %}                    
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1">Escolha o endereço de entrega:</label>
-                            <select class="form-control w-75" name="escolhido" id="exampleFormControlSelect1">
-                                {% for endereco in enderecos %}
                                     
-                                    {% if endereco.logradouro == escolhido %}
-                                        <option value="{{ endereco.logradouro }}" selected>{{ endereco.logradouro }}</option>
-                                    {% else %}
-                                        <option value="{{ endereco.logradouro }}">{{ endereco.logradouro }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Calcular Frete</button>
-                    </form>
-                </div>
-                <div class="row pt-3 justify-content-between">
-                    <a class="btn btn-dark" href="../order">Voltar</a>
-                    {% if valor_frete %}
-                        <a class="btn btn-success" href="#">Avançar</a>
-                    {% else %}
-                        <a class="btn btn-success disabled" href="#">Avançar</a>
-                    {% endif %}
-                </div>
+                    <div class="row pt-2">
+                        <form method="POST" action="/entrega/">
+                            {% csrf_token %}                    
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Escolha o endereço de entrega:</label>
+                                <select class="form-control w-75" name="escolhido" id="exampleFormControlSelect1">
+                                    {% for endereco in enderecos %}
+                                        
+                                        {% if endereco.logradouro == escolhido %}
+                                            <option value="{{ endereco.logradouro }}" selected>{{ endereco.logradouro }}</option>
+                                        {% else %}
+                                            <option value="{{ endereco.logradouro }}">{{ endereco.logradouro }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Calcular Frete</button>
+                        </form>
+                        {% if valor_frete %}
+                            <div class="row pt-2">
+                                <p>Total do Pedido: {{ total }}</p>
+                                <p>Valor do Frete: {{ valor_frete }}</p>
+                                <p>Total + Frete: {{ valor_com_frete }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="row pt-3 justify-content-between">
+                        <a class="btn btn-dark" href="../order">Voltar</a>
+                        {% if valor_frete %}
+                            <a class="btn btn-success" href="#">Avançar</a>
+                        {% else %}
+                            <a class="btn btn-success disabled" href="#">Avançar</a>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="">
+                        <a href="../enderecos" class="btn btn-dark">Cadastrar Endereço</a>
+                    </div>
+                {% endif %}
             </div>
         </section>
     </div>
