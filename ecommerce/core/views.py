@@ -261,20 +261,37 @@ def entrega_view(request):
         total_width = 0
         total_length = 0
 
-        # Chame a API do Melhor Envio para calcular o frete
-        url = 'https://api.melhorenvio.com.br/v2/calculator'
-        headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
-        payload = {'from': 'CEP_ORIGEM', 'to': escolhido, 'weight': '1', 'height': '10', 'width': '15', 'length': '20'}
+        
 
-        # response = requests.post(url, headers=headers, data=payload)
-        # resultado = response.json()
-        valor_frete = 35
-        valor_com_frete = total + valor_frete
-        context.setdefault('total',total)
-        context.setdefault('valor_frete',valor_frete)
-        context.setdefault('valor_com_frete',valor_com_frete)
+       
+        if escolhido != None:
+            # Chame a API do Melhor Envio para calcular o frete
+
+            carrinho = request.session.get('cart')
+            print(carrinho)
+            for v in carrinho.values():
+                produto = Product.objects.get(product_name=v['nome'])
+                total_height += produto.product_height * int(v['quantidade'])
+                total_weight += produto.product_weight * int(v['quantidade'])
+                total_width += produto.product_width * int(v['quantidade'])
+                total_length += produto.product_length * int(v['quantidade'])
+
+
+            url = 'https://api.melhorenvio.com.br/v2/calculator'
+            headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
+            payload = {'from': 'CEP_ORIGEM', 'to': escolhido, 'weight': str(total_weight), 'height': str(total_height), 'width': str(total_width), 'length': str(total_length)}
+            # response = requests.post(url, headers=headers, data=payload)
+            # resultado = response.json()
+
+
+            valor_frete = 35
+            valor_com_frete = total + valor_frete
+            context.setdefault('total',total)
+            context.setdefault('valor_frete',valor_frete)
+            context.setdefault('valor_com_frete',valor_com_frete)
 
     else:
+        print("blablabla")
         escolhido = ""    
     
 
