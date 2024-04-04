@@ -113,15 +113,24 @@ def signup_view(request):
         cep = int(request.POST['cep'])
         estado = request.POST['estado']
 
-        usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p)
-        usuario.save()
-        endereco = Address.objects.create(cep = cep, logradouro = logradouro,
+        try:
+            usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p)
+            usuario.save()
+        except Error:
+            messages.error(request, "Ops. Nome de Usuário já cadastrado.")
+        
+
+        try:
+            endereco = Address.objects.create(cep = cep, logradouro = logradouro,
                                           complemento = complemento,
                                           numero = numero,
                                           cidade = cidade,
                                           estado = estado,
                                           user_id=usuario)
-        endereco.save()
+            endereco.save()
+        except Error:
+            messages.error(request, "Ops. Error ao cadastrar seu endereço.")
+        
         return render(request,'signup.html',context)
 
 
@@ -259,6 +268,12 @@ def entrega_view(request):
 
         # response = requests.post(url, headers=headers, data=payload)
         # resultado = response.json()
+        valor_frete = 35
+        valor_com_frete = total + valor_frete
+        context.setdefault('total',total)
+        context.setdefault('valor_frete',valor_frete)
+        context.setdefault('valor_com_frete',valor_com_frete)
+
     else:
         escolhido = ""    
     
