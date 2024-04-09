@@ -55,7 +55,7 @@ button:hover {
     
     <!-- ***** Product Area Starts ***** -->
     <section class="section pt-5" id="product" style="padding-top: 15px;"> <!-- Padding top adcionado devido a remoção do cabeçalho-->
-        <form method="POST" action="{% url 'order' %}">
+        <form method="POST" action="{% url 'order/' %}">
             {% csrf_token %}
             <div class="container">
                 <div class="row">

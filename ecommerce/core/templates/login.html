@@ -21,7 +21,7 @@
                 <h2 class="container pb-1">Login</h2>
                 <div class="container"> 
                     
-                    <form method="POST" action="{% url 'login' %}">
+                    <form method="POST" action="{% url 'login/' %}">
                       {% csrf_token %}
 
                       <div class='loginform'>

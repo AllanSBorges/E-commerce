@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Hexashop - Promoção{% endblock %}
+{% block content %}
+<div class="main-banner pt-5 mt-5">
+
+    <div class="container">
+        
+            <div class="container-fluid pt-3">
+                {% if desconto_valor %}
+                    <p>Valor do Pedido: R$ </p>
+                    <p>Desconto: </p>
+                    <p>Valor a ser pago: </p>
+                {% endif %}
+            </div>
+            <form method="POST" action="/confirmar/">
+                {% csrf_token %}
+            
+            <fieldset class="pt-3">
+                <label for="formCodigoPromocionalInput">Código Promocional</label>
+                <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" placeholder="Insira o código aqui.">
+                <input type="submit" class="btn btn-primary mt-3" value="Validar">
+                
+            </fieldset>
+            <div class="d-flex justify-content-between pt-3">
+                <a href="{% url 'entrega/'%}" class="btn btn-dark">Voltar</a>
+                <a href="{% url 'entrega/'%}" class="btn btn-success">Avançar</a>
+            </div>
+            
+        
+
+        </form>  
+    </div>
+
+</div>
+
+    
+   
+   
+
+{% endblock %}   

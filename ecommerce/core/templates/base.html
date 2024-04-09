@@ -70,10 +70,10 @@ https://templatemo.com/tm-571-hexashop
                                     <li><a href="../alterar_senha/">Alterar Senha </a></li>                                                                      
                                   {% else %}
                                     <li><a href="../login/">Login</a></li>
-                                    <li><a href="{% url 'signup' %}">Cadastre-se</a></li>
+                                    <li><a href="{% url 'signup/' %}">Cadastre-se</a></li>
                                   {% endif%}
                                   
-                                  <li><a href="{% url 'order' %}">Pedido  <i class="fa fa-shopping-cart"><span class="badge badge-light">{{ qtd_prod }}</span></i></a></li>   
+                                  <li><a href="{% url 'order/' %}">Pedido  <i class="fa fa-shopping-cart"><span class="badge badge-light">{{ qtd_prod }}</span></i></a></li>   
                                 </ul>
                             </li>
                             <li class="submenu">
@@ -85,7 +85,7 @@ https://templatemo.com/tm-571-hexashop
                                 </ul>
                             </li>
                             {% if user.is_authenticated %}
-                              <li class="scroll-to-section"><a href="{% url 'logout' %}">Sair</a></li>
+                              <li class="scroll-to-section"><a href="{% url 'logout/' %}">Sair</a></li>
                             {% else %}
                               <li><a href="../login">Login</a></li>                
                             {% endif %}
@@ -159,7 +159,7 @@ https://templatemo.com/tm-571-hexashop
                           </div>
                           <ul>
                               <li><a href="#">{{ dados.loja_end }}</a></li>
-                              <li><a href="#">{{ dados.loja_email }}</a></li>
+                              <li><a href="mailto:someone@example.com">{{ dados.loja_email }}</a></li>
                               <li><a href="#">{{ dados.loja_tel }}</a></li>
                           </ul>
                       </div>
@@ -167,9 +167,9 @@ https://templatemo.com/tm-571-hexashop
                   <div class="col-lg-3">
                       <h4>Shopping &amp; Categories</h4>
                       <ul>
-                          <li><a href="#">Men’s Shopping</a></li>
-                          <li><a href="#">Women’s Shopping</a></li>
-                          <li><a href="#">Kid's Shopping</a></li>
+                        {% for r in rodape %}
+                          <li><a href="../category/{{ r.id|safe }}">{{r.category_name|safe}}’s Shopping</a></li>                              
+                        {% endfor %}
                       </ul>
                   </div>
                   <div class="col-lg-3">

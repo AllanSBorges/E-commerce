@@ -18,7 +18,8 @@ dados = {"loja_nome": 'Hexashop',
          "loja_razao_social": 'Hexashop LTDA',
          "loja_email": 'sac@hexashop.com',
          "loja_tel": '010-020-0340',
-         "loja_end":  'Collins Ave, ,  33160, ',
+         "loja_end":  'Collins Ave',
+         "loja_cep": '33160',
          "loja_end_num": '16501',
          "loja_end_bairo": "Sunny Isles Beach",
          "loja_end_estado": "FL",
@@ -38,9 +39,23 @@ def dados_nav(request):
     carrinho = request.session.get('cart', {})
     qtd_prod = len(carrinho)
 
+    aux = []
+    for i in categorias:
+        aux.append(i)
+    
+    if aux:
+        if len(aux) < 5:
+            num = len(aux)
+        else:
+            num = 5
+        rodape = sample(aux,num) 
+    else:
+        rodape = []
+
     context = {'categorias': categorias,
                'qtd_prod': qtd_prod,
-               'dados': dados}
+               'dados': dados,
+               'rodape': rodape }
     return context
 
 def media_avaliacao(request,product_id):
@@ -118,6 +133,7 @@ def signup_view(request):
             usuario.save()
         except Error:
             messages.error(request, "Ops. Nome de Usuário já cadastrado.")
+            return render(request,'signup.html',context)
         
 
         try:
@@ -269,29 +285,32 @@ def entrega_view(request):
 
             carrinho = request.session.get('cart')
             print(carrinho)
-            for v in carrinho.values():
-                produto = Product.objects.get(product_name=v['nome'])
-                total_height += produto.product_height * int(v['quantidade'])
-                total_weight += produto.product_weight * int(v['quantidade'])
-                total_width += produto.product_width * int(v['quantidade'])
-                total_length += produto.product_length * int(v['quantidade'])
+            if carrinho:
+                for v in carrinho.values():
+                    produto = Product.objects.get(product_name=v['nome'])
+                    total_height += produto.product_height * int(v['quantidade'])
+                    total_weight += produto.product_weight * int(v['quantidade'])
+                    total_width += produto.product_width * int(v['quantidade'])
+                    total_length += produto.product_length * int(v['quantidade'])
 
 
-            url = 'https://api.melhorenvio.com.br/v2/calculator'
-            headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
-            payload = {'from': 'CEP_ORIGEM', 'to': escolhido, 'weight': str(total_weight), 'height': str(total_height), 'width': str(total_width), 'length': str(total_length)}
-            # response = requests.post(url, headers=headers, data=payload)
-            # resultado = response.json()
+                url = 'https://api.melhorenvio.com.br/v2/calculator'
+                headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
+                payload = {'from': dados['loja_cep'], 'to': escolhido, 'weight': str(total_weight), 'height': str(total_height), 'width': str(total_width), 'length': str(total_length)}
+                # response = requests.post(url, headers=headers, data=payload)
+                # resultado = response.json()
 
 
-            valor_frete = 35
-            valor_com_frete = total + valor_frete
-            context.setdefault('total',total)
-            context.setdefault('valor_frete',valor_frete)
-            context.setdefault('valor_com_frete',valor_com_frete)
+                valor_frete = 35
+                valor_com_frete = total + valor_frete
+                context.setdefault('total',total)
+                context.setdefault('valor_frete',valor_frete)
+                context.setdefault('valor_com_frete',valor_com_frete)
+                request.session['total'] = total
+                request.session['valor_frete'] = valor_frete
+                request.session['valor_com_frete'] = valor_com_frete
 
     else:
-        print("blablabla")
         escolhido = ""    
     
 
@@ -300,6 +319,13 @@ def entrega_view(request):
     
 
     return render(request, 'entrega.html', context)
+
+@login_required(login_url='/login/')
+def pagamento_view(request):
+    context = dados_nav(request)
+    if request.method == "POST":
+        print("Teste")
+    return render(request, 'confirmar.html', context)
 
 
 def index_view(request):
@@ -407,27 +433,17 @@ def order_view(request):
 
 
 @login_required(login_url='/login/')
-def confirmar_view(request):
+def desconto_view(request):
     context = dados_nav(request)    
 
     if request.method == "POST":
         
-        i = 0
-        for key, value in request.POST.items():
-            print(key, value)
-        while True:
-            quantidade = "quantity"+str(i)
-            
-            if request.POST.get(quantidade):
-                print(request.POST.get(quantidade))
-            else:
-                break
-            i += 1
+        pass
         
   
 
     
-    return render(request,'confirmar.html', context)
+    return render(request,'desconto.html', context)
 
 def category_view(request, pk):
     context = dados_nav(request)
