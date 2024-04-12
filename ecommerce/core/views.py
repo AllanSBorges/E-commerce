@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import Category, Product, Customer, Evaluation, Address, Order, OrderProduct
+from .models import Category, Product, Customer, Evaluation, Address, Order, OrderProduct, Discount, DiscountOrder
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -17,8 +17,8 @@ dados = {"loja_nome": 'Hexashop',
          "loja_cnpj": '01.304.648/0001-14',
          "loja_razao_social": 'Hexashop LTDA',
          "loja_email": 'sac@hexashop.com',
-         "loja_tel": '010-020-0340',
-         "loja_end":  'Collins Ave',
+         "loja_tel": '(22) 38534334',
+         "loja_end":  'Rua Projetada',
          "loja_cep": '33160',
          "loja_end_num": '16501',
          "loja_end_bairo": "Sunny Isles Beach",
@@ -37,7 +37,12 @@ dados = {"loja_nome": 'Hexashop',
 def dados_nav(request):
     categorias = Category.objects.all()
     carrinho = request.session.get('cart', {})
-    qtd_prod = len(carrinho)
+    qtd_prod = 0
+    if len(carrinho):
+        for item in carrinho.values():
+            qtd_prod += int(item['quantidade'])
+    
+        
 
     aux = []
     for i in categorias:
@@ -82,6 +87,7 @@ def login_view(request):
     
     if ('next' in request.GET) and request.user.is_authenticated:
         proxima_pagina = request.GET['next']
+        
         return redirect(proxima_pagina)
     
     if request.method == 'POST':
@@ -100,13 +106,14 @@ def login_view(request):
             tentativas += 1
             request.session['tentativas'] = tentativas
             messages.error(request, "Login ou senha inválidos, Por favor tente novamente...")
-            return redirect('login')
+            return redirect('login/')
     else:
         context.setdefault('tentativas',tentativas)
         return render(request, 'login.html', context)
 
     
 def logout_view(request):
+    request.session['tentativas'] = 0
     logout(request)
     return redirect('page/')
     
@@ -204,7 +211,6 @@ def pedidos_view(request):
 
    user_id = int(request.user.id)
    cliente = Customer.objects.get(pk = user_id)
-   print(cliente.first_name)
    pedidos = Order.objects.filter(order_client = cliente)
 
    # Configurar a paginação
@@ -257,6 +263,12 @@ def enderecos_view(request):
 def entrega_view(request):
     context = dados_nav(request)
     enderecos = Address.objects.filter(user_id=request.user)
+    if context['qtd_prod'] == 0:
+        return redirect('/')
+
+    
+
+
     if not enderecos:
         messages.warning(request, "Por favor cadastre pelo menos um endereço para a entrega.")
 
@@ -269,6 +281,9 @@ def entrega_view(request):
 
 
     if request.method == "POST":
+        
+
+
         escolhido = request.POST.get('escolhido')
         print(escolhido)
         context.setdefault('escolhido', escolhido)
@@ -281,7 +296,8 @@ def entrega_view(request):
 
        
         if escolhido != None:
-            # Chame a API do Melhor Envio para calcular o frete
+            
+            messages.warning(request, """Seria utilizado algum serviço de Entrega de terceiros para realizar o calculo do frete, previsão de entrega, rastreio do pedido, o que no momento vai além do objetivo deste projeto.""")
 
             carrinho = request.session.get('cart')
             print(carrinho)
@@ -293,10 +309,11 @@ def entrega_view(request):
                     total_width += produto.product_width * int(v['quantidade'])
                     total_length += produto.product_length * int(v['quantidade'])
 
-
+                
                 url = 'https://api.melhorenvio.com.br/v2/calculator'
                 headers = {'Authorization': 'Token SEU_TOKEN_AQUI'}
                 payload = {'from': dados['loja_cep'], 'to': escolhido, 'weight': str(total_weight), 'height': str(total_height), 'width': str(total_width), 'length': str(total_length)}
+
                 # response = requests.post(url, headers=headers, data=payload)
                 # resultado = response.json()
 
@@ -434,16 +451,79 @@ def order_view(request):
 
 @login_required(login_url='/login/')
 def desconto_view(request):
-    context = dados_nav(request)    
+    context = dados_nav(request)
 
+    if context['qtd_prod'] == 0:
+        return redirect('/')    
+
+
+    valor_com_frete = round(float(request.session.get('valor_com_frete',0)),2)
+           
     if request.method == "POST":
-        
-        pass
-        
-  
+        messages.warning(request, """Seria utilizado algum serviço de Pagamento de terceiros válidar a transação,
+                          o que no momento vai além do objetivo deste projeto.""")
+        codigo_promocional =  request.POST['CodigoPromocional']
+        context.setdefault('avancar',True)
 
-    
+        
+        desconto = Discount.objects.filter(codigo=codigo_promocional)
+        if len(desconto):
+            percentagem_desc = desconto[0].porcentagem / 100
+            percentagem_vlw = round(valor_com_frete * percentagem_desc,2)
+            valor_final = round(valor_com_frete - percentagem_vlw,2)
+            context.setdefault('desconto', percentagem_vlw)            
+            context.setdefault('valor_final', valor_final )
+            context.setdefault('total', valor_com_frete )
+        else:
+            context.setdefault('total',valor_com_frete )
+            context.setdefault('valor_final',valor_com_frete)
+            if 'desconto' in context: context.pop('desconto')
+
+        
+        pagamento = request.POST['forma_pagamento']
+        context.setdefault('escolhido',pagamento)
+        match pagamento:
+
+            case "1x no boleto":
+                context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
+                request.session['forma'] = 'boleto'
+
+            case "1x no PIX":
+                context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
+                request.session['forma'] = 'boleto'
+                
+
+            case "1x no cartão":
+                request.session['forma'] = 'cartao'
+            
+            case "2x no cartão":
+                request.session['forma'] = 'cartao'
+                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 2, 2)
+
+            case "3x no cartão":
+                request.session['forma'] = 'cartao'
+                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 3, 2)
+        
+            case "4x no cartão":
+                request.session['forma'] = 'cartao'
+                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 4, 2)
+        
+            case _:
+                print(pagamento)
+        print(context['escolhido'])
+
+    else:
+        context.setdefault('avancar',False)
+        context.setdefault('total',valor_com_frete )
+        context.setdefault('valor_final',valor_com_frete)  
+      
     return render(request,'desconto.html', context)
+
+@login_required(login_url='/login/')
+def forma_pagamento_view(request):
+    context = dados_nav(request)
+
+    return render(request, 'forma_pagamento.html',context)
 
 def category_view(request, pk):
     context = dados_nav(request)
@@ -474,9 +554,28 @@ def category_view(request, pk):
     return render(request,'products.html', context)
 
 def categories_view(request):
-     context = dados_nav(request)
+    context = dados_nav(request)
 
-     return render(request, 'categorias.html',context )
+     # Configurar a paginação
+    
+    categorias = Category.objects.all()
+    print(categorias)
+    paginator = Paginator(categorias,4)  # 12 itens por página
+    page = request.GET.get('page')
+
+    try:
+        itens_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        # Se a página não é um número inteiro, exibir a primeira página
+        itens_paginados = paginator.page(1)
+    except EmptyPage:
+        # Se a página está fora do intervalo (e.g., 9999), exibir a última página
+        itens_paginados = paginator.page(paginator.num_pages)
+    print(itens_paginados)
+
+    context.setdefault('itens_paginados', itens_paginados)
+
+    return render(request, 'categorias.html',context )
 
 @login_required(login_url='/login/')
 def avaliar_view(request, pk):

@@ -84,6 +84,7 @@ class Order(models.Model):
     order_status = models.CharField(max_length = 15)
     order_date = models.DateField(auto_now=True)
     order_total = models.DecimalField(max_digits=7, decimal_places=2)
+    order_payment_method = models.CharField(max_length = 15)
 
 class OrderProduct(models.Model):
     item_id = models.ForeignKey("Product", on_delete=models.CASCADE)
@@ -127,3 +128,4 @@ class Discount(models.Model):
 class DiscountOrder(models.Model):
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
     discount_id = models.ForeignKey("Discount", on_delete=models.CASCADE)
+    discount_value = models.DecimalField(max_digits=7, decimal_places=2)

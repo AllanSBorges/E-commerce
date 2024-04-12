@@ -10,24 +10,24 @@
                 <div class="col-lg-6">
                     <div class="right-content">
                         <div class="row">
-                            {% for categoria in categorias %}
+                            {% for item in itens_paginados %}
                                 <div class="col-lg-6">
                                     <div class="right-first-image">
                                         <div class="thumb">
                                             <div class="inner-content">
-                                                <h4>{{ categoria.category_name }}</h4>
-                                                <span>{{ categoria.category_breve }}</span>
+                                                <h4>{{ item.category_name }}</h4>
+                                                <span>{{ item.category_breve }}</span>
                                             </div>
                                             <div class="hover-content">
                                                 <div class="inner">
-                                                    <h4>{{ categoria.category_name }}</h4>
-                                                    <p>{{ categoria.category_description }}</p>
+                                                    <h4>{{ item.category_name }}</h4>
+                                                    <p>{{ item.category_description }}</p>
                                                     <div class="main-border-button">
-                                                        <a href="../category/{{ categoria.id }}">Discover More</a>
+                                                        <a href="../category/{{ item.id }}">Saiba Mais!</a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <img src="{{ categoria.category_image.url }}">
+                                            <img src="{{ item.category_image.url }}">
                                         </div>
                                     </div>
                                 </div>
@@ -37,6 +37,41 @@
                 </div>
             </div>
         </div>
+
+    <section class="section" id="products">    
+        <div class="col-lg-12">
+            <div class="pagination">
+                
+                    <ul>
+                        <li>
+                            {% if itens_paginados.has_previous %}
+                                <a href="?page=1">&lt;&lt;</a>
+                                <a href="?page={{ itens_paginados.previous_page_number }}">&lt;</a>            
+                            {% else %}
+                                <a>&laquo;&laquo;</a>
+                                <a >&laquo;</a>
+                            {% endif %}
+
+                        </li>
+                        {% for page_num in itens_paginados.paginator.page_range %}    
+                        <li class="{% if itens_paginados.number == page_num %}active{% endif %}">                                    
+                            <a href="?page={{ page_num }}">{{ page_num }}</a>                                    
+                        </li>
+                        {% endfor %}
+                        <li>
+                            {% if itens_paginados.has_next %}
+                                <a href="?page={{ itens_paginados.next_page_number }}">&gt;</a>
+                                <a href="?page={{ itens_paginados.paginator.num_pages }}">&gt;&gt;</a>                                    
+                            {% else %}
+                                <a>&raquo;</a>
+                                <a >&raquo;&raquo;</a>
+                            {% endif %}
+                        </li>                       
+                    </ul>
+                
+            </div>
+        </div>
+    </section>
     </div>
     <!-- ***** Main Banner Area End ***** -->
 {% endblock content %}

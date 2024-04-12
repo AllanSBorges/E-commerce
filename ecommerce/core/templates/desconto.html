@@ -2,40 +2,78 @@
 {% load static %}
 {% block title %}Hexashop - Promoção{% endblock %}
 {% block content %}
-<div class="main-banner pt-5 mt-5">
+    <div class="main-banner pt-5 mt-5">
 
-    <div class="container">
-        
-            <div class="container-fluid pt-3">
-                {% if desconto_valor %}
-                    <p>Valor do Pedido: R$ </p>
-                    <p>Desconto: </p>
-                    <p>Valor a ser pago: </p>
-                {% endif %}
-            </div>
-            <form method="POST" action="/confirmar/">
-                {% csrf_token %}
+        <div class="container">
             
-            <fieldset class="pt-3">
-                <label for="formCodigoPromocionalInput">Código Promocional</label>
-                <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" placeholder="Insira o código aqui.">
-                <input type="submit" class="btn btn-primary mt-3" value="Validar">
+               
+                <form method="POST" action="/desconto/">
+                    {% csrf_token %}
                 
-            </fieldset>
-            <div class="d-flex justify-content-between pt-3">
-                <a href="{% url 'entrega/'%}" class="btn btn-dark">Voltar</a>
-                <a href="{% url 'entrega/'%}" class="btn btn-success">Avançar</a>
-            </div>
+                <fieldset class="pt-3">
+                    <label for="formCodigoPromocionalInput">Código Promocional</label>
+                    <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" name="CodigoPromocional" placeholder="Insira o código aqui.">
+                    
+                    <div class="form-group mt-2">
+                        <label for="exampleFormControlSelect1">Forma de Pagamento</label>
+                        <select class="form-control w-auto" id="exampleFormControlSelect1" name="forma_pagamento">
+                            {% if escolhido == '1x no boleto'%}
+                                <option  selected>1x no boleto</option> 
+                            {% else %}
+                                <option>1x no boleto</option>
+                            {% endif %}                     
+                            {% if escolhido == '1x no PIX' %}
+                                <option selected>1x no PIX</option>
+                            {% else %}
+                                <option>1x no PIX</option> 
+                            {% endif %}                             
+                            {% if escolhido == '1x no cartão'%}
+                                <option  selected>1x no cartão</option>
+                            {% else %}
+                                <option>1x no cartão</option>
+                            {% endif %}
+                            {% if escolhido == '2x no cartão'%}
+                                <option  selected >2x no cartão</option>
+                            {% else %}
+                                <option>2x no cartão</option>
+                            {% endif %}
+                            {% if escolhido == '3x no cartão'%}
+                                <option  selected >3x no cartão</option>
+                            {% else %}
+                                <option>3x no cartão</option>
+                            {% endif %}
+                            {% if escolhido == '4x no cartão'%}
+                                <option  selected>4x no cartão</option>
+                            {% else %}
+                                <option>4x no cartão</option>
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary mt-1" value="Calcular">
+                    
+                </fieldset>
+                <div class="container-fluid pt-4">
+                    
+                    <p>Valor do Pedido: <span class="text-success">R$ {{ total }}</span></p>
+                    <p>Desconto: {% if desconto %}<span class="text-danger">R$ {{ desconto }}</span></p>{% endif %}
+                    <p>Valor a ser pago: <span class="text-success">R$ {{ valor_final }}</span></p>
+                
+                </div>
+                <div class="d-flex justify-content-between pt-3">
+                    <a href="{% url 'entrega/'%}" class="btn btn-dark">Voltar</a>
+                    {% if avancar %}
+                        <a href="{% url 'forma_pagamento/'%}" class="btn btn-success">Avançar</a>
+                    {% else %}
+                        <a href="{% url 'forma_pagamento/'%}" class="btn btn-success disabled" >Avançar</a>
+                    {% endif %}
+                </div>
+                
             
-        
 
-        </form>  
+            </form>  
+        </div>
+
     </div>
-
-</div>
-
-    
    
-   
-
 {% endblock %}   
