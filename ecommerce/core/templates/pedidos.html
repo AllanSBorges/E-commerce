@@ -30,9 +30,40 @@
         </tbody>
       </table>
     </div>
-    <div class="row pt-2">
-      
-    </div>
+    <section class="section" id="products">    
+      <div class="col-lg-12">
+          <div class="pagination">
+              
+                  <ul>
+                      <li>
+                          {% if itens_paginados.has_previous %}
+                              <a href="?page=1">&lt;&lt;</a>
+                              <a href="?page={{ itens_paginados.previous_page_number }}">&lt;</a>            
+                          {% else %}
+                              <a>&laquo;&laquo;</a>
+                              <a >&laquo;</a>
+                          {% endif %}
+
+                      </li>
+                      {% for page_num in itens_paginados.paginator.page_range %}    
+                      <li class="{% if itens_paginados.number == page_num %}active{% endif %}">                                    
+                          <a href="?page={{ page_num }}">{{ page_num }}</a>                                    
+                      </li>
+                      {% endfor %}
+                      <li>
+                          {% if itens_paginados.has_next %}
+                              <a href="?page={{ itens_paginados.next_page_number }}">&gt;</a>
+                              <a href="?page={{ itens_paginados.paginator.num_pages }}">&gt;&gt;</a>                                    
+                          {% else %}
+                              <a>&raquo;</a>
+                              <a >&raquo;&raquo;</a>
+                          {% endif %}
+                      </li>                       
+                  </ul>
+              
+          </div>
+      </div>
+  </section>
   </div>
 </div>
         

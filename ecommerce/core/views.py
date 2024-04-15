@@ -484,30 +484,17 @@ def desconto_view(request):
         context.setdefault('escolhido',pagamento)
         match pagamento:
 
-            case "1x no boleto":
+            case "Boleto":
                 context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
                 request.session['forma'] = 'boleto'
 
-            case "1x no PIX":
+            case "Cartão de Crédito":
                 context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
-                request.session['forma'] = 'boleto'
-                
+                request.session['forma'] = 'cartao'                
 
-            case "1x no cartão":
-                request.session['forma'] = 'cartao'
-            
-            case "2x no cartão":
-                request.session['forma'] = 'cartao'
-                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 2, 2)
+            case "PIX":
+                request.session['forma'] = 'pix'
 
-            case "3x no cartão":
-                request.session['forma'] = 'cartao'
-                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 3, 2)
-        
-            case "4x no cartão":
-                request.session['forma'] = 'cartao'
-                context['valor_final'] = round(float(context['valor_final']) * 1.06 ** 4, 2)
-        
             case _:
                 print(pagamento)
         print(context['escolhido'])
@@ -522,6 +509,13 @@ def desconto_view(request):
 @login_required(login_url='/login/')
 def forma_pagamento_view(request):
     context = dados_nav(request)
+
+    if context['qtd_prod'] == 0:
+        return redirect('/')
+
+    print(request.user)
+    print(request.session.keys()) 
+
 
     return render(request, 'forma_pagamento.html',context)
 
