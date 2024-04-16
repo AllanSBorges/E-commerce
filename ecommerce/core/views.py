@@ -215,7 +215,7 @@ def pedidos_view(request):
 
    # Configurar a paginação
    if pedidos:
-       paginator = Paginator(pedidos, 12)  # 12 itens por página
+       paginator = Paginator(pedidos, 10)  # 10 itens por página
        page = request.GET.get('page')
        try:
            itens_paginados = paginator.page(page)
@@ -228,6 +228,27 @@ def pedidos_view(request):
         
        context.setdefault('itens_paginados',itens_paginados)
    return render(request,'pedidos.html', context)
+
+@login_required(login_url='/login/')
+def pedido_view(request,pk):
+    context = dados_nav(request)
+    pedido = Order.objects.get(pk=pk)
+    items = OrderProduct.objects.filter(order_id = pedido)
+    
+    dados_pedido = {}
+    for index,item in enumerate(items):
+        preco = item.item_price
+        quantidade = item.item_quantity
+        nome = item.item_id.product_name
+
+        dados_pedido.setdefault(index, {'nome': nome,
+                                        'preco': preco,
+                                        'quantidade': quantidade})
+    print(dados_pedido)
+
+        
+
+    return render(request, 'pedido.html', context)
 
 @login_required(login_url='/login/')
 def enderecos_view(request):
@@ -450,7 +471,7 @@ def order_view(request):
 
 
 @login_required(login_url='/login/')
-def desconto_view(request):
+def forma_pagamento_view(request):
     context = dados_nav(request)
 
     if context['qtd_prod'] == 0:
@@ -468,16 +489,21 @@ def desconto_view(request):
         
         desconto = Discount.objects.filter(codigo=codigo_promocional)
         if len(desconto):
-            percentagem_desc = desconto[0].porcentagem / 100
-            percentagem_vlw = round(valor_com_frete * percentagem_desc,2)
-            valor_final = round(valor_com_frete - percentagem_vlw,2)
-            context.setdefault('desconto', percentagem_vlw)            
-            context.setdefault('valor_final', valor_final )
-            context.setdefault('total', valor_com_frete )
+            if desconto[0].validade.date() >= datetime.date.today():
+                percentagem_desc = desconto[0].porcentagem / 100
+                percentagem_vlw = round(valor_com_frete * percentagem_desc,2)
+                valor_final = round(valor_com_frete - percentagem_vlw,2)
+                context.setdefault('desconto', percentagem_vlw)            
+                context.setdefault('valor_final', valor_final )
+                context.setdefault('total', valor_com_frete )
+                request.session['desconto'] = desconto[0].codigo
+                
         else:
             context.setdefault('total',valor_com_frete )
             context.setdefault('valor_final',valor_com_frete)
             if 'desconto' in context: context.pop('desconto')
+            if 'desconto' in request.session: request.session.pop('desconto')
+            
 
         
         pagamento = request.POST['forma_pagamento']
@@ -485,39 +511,55 @@ def desconto_view(request):
         match pagamento:
 
             case "Boleto":
-                context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
+                context['valor_final'] = round(float(context.get('valor_final',0)) * 0.95, 2)
                 request.session['forma'] = 'boleto'
 
             case "Cartão de Crédito":
-                context['valor_final'] = round(float(context['valor_final']) * 0.95, 2)
+                context['valor_final'] = round(float(context.get('valor_final',0)) * 0.95, 2)
                 request.session['forma'] = 'cartao'                
 
             case "PIX":
                 request.session['forma'] = 'pix'
 
             case _:
-                print(pagamento)
-        print(context['escolhido'])
+                if 'forma' in request.session: request.session.pop('forma')
+
+        
 
     else:
         context.setdefault('avancar',False)
         context.setdefault('total',valor_com_frete )
-        context.setdefault('valor_final',valor_com_frete)  
-      
-    return render(request,'desconto.html', context)
+        context.setdefault('valor_final',valor_com_frete)
+
+    request.session['valor_final'] = context.get('valor_final')
+    return render(request,'forma_pagamento.html', context)
 
 @login_required(login_url='/login/')
-def forma_pagamento_view(request):
+def conclusao_view(request):
     context = dados_nav(request)
 
     if context['qtd_prod'] == 0:
         return redirect('/')
+    
+    print(request.session.items())
 
-    print(request.user)
-    print(request.session.keys()) 
+    
+    forma = request.session.get('forma')
+    valor_final = request.session.get('valor_final')
+    pedido = Order(order_client = request.user, order_status = "Pagamento Pendente", order_total = valor_final, order_payment_method = forma)
+    cart_items = request.session['cart']
+    pedido.save()
+
+    for item in cart_items:
+        product = Product.objects.filter( product_name = cart_items[item]['nome'])[0]
+        item_price = round(float(cart_items[item]['preco']),2)
+        item_quantidade = int(cart_items[item]['quantidade'])
+        orderProd = OrderProduct(item_id = product, order_id = pedido, item_price = item_price, item_quantity = item_quantidade)
+        orderProd.save()
+    #print(request.session.items())
 
 
-    return render(request, 'forma_pagamento.html',context)
+    return render(request, 'conclusao.html',context)
 
 def category_view(request, pk):
     context = dados_nav(request)

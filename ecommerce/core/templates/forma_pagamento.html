@@ -1,19 +1,157 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Hexashop - Forma de Pagamento{% endblock %}
-
+{% block title %}Hexashop - Promoção{% endblock %}
 {% block content %}
+
+    <script>
+
+function adicionarCampos() {
+    var formaPagamento = document.getElementById("formaPagamento").value;
+    var form = document.getElementById("formPagamento");
+    var forma = document.getElementById("forma");
+    var enviar = document.getElementById("enviar");
+
+    // Limpa campos anteriores, se existirem
+    if (forma) {
+        form.removeChild(forma);
+    }
+
+    if (enviar) {
+        form.removeChild(enviar);
+    }
+
+    forma = document.createElement("fieldset");
+    forma.id = "forma";
+
+    if (formaPagamento === "Cartão de Crédito") {
+        var nomeTitular = document.createElement("input");
+        nomeTitular.type = "text";
+        nomeTitular.name = "nomeTitular";
+        nomeTitular.placeholder = "Nome do Titular";
+
+        var numeroCartao = document.createElement("input");
+        numeroCartao.type = "text";
+        numeroCartao.name = "numeroCartao";
+        numeroCartao.placeholder = "Número do Cartão";
+
+        var cvc = document.createElement("input");
+        cvc.type = "text";
+        cvc.name = "cvc";
+        cvc.placeholder = "CVC";
+
+        var validade = document.createElement("input");
+        validade.type = "text";
+        validade.name = "validade";
+        validade.placeholder = "Validade (MM/AA)";
+
+        forma.appendChild(nomeTitular);
+        forma.appendChild(document.createElement("br"));
+        forma.appendChild(numeroCartao);
+        forma.appendChild(document.createElement("br"));
+        forma.appendChild(cvc);
+        forma.appendChild(document.createElement("br"));
+        forma.appendChild(validade);
+    } else if (formaPagamento === "Boleto") {
+        var cpf = document.createElement("input");
+        cpf.type = "text";
+        cpf.name = "cpf";
+        cpf.placeholder = "CPF";
+
+        var dataVencimento = document.createElement("input");
+        dataVencimento.type = "text";
+        dataVencimento.name = "dataVencimento";
+        dataVencimento.placeholder = "Data de Vencimento (DD/MM/AAAA)";
+
+        forma.appendChild(cpf);
+        forma.appendChild(document.createElement("br"));
+        forma.appendChild(dataVencimento);
+
+    } else if (formaPagamento === "PIX") {
+        var chavePIX = document.createElement("input");
+        chavePIX.type = "text";
+        chavePIX.name = "chavePIX";
+        chavePIX.value = "{{ dados.loja_cnpj }}"
+        chavePIX.placeholder = "Chave PIX";
+        chavePIX.setAttribute("readonly", true);
+
+        forma.appendChild(chavePIX);
+    }
+
+    form.appendChild(forma);
+
+    if (formaPagamento !== "Selecione") {
+        var enviar = document.createElement("button");
+        enviar.type = "submit";
+        enviar.className = "btn btn-primary mt-2";
+        enviar.textContent = "Calcular";
+        enviar.id = "enviar";
+        form.appendChild(enviar);
+    }
+    
+
+}
+</script>
+
+
     <div class="main-banner pt-5 mt-5">
 
         <div class="container">
             
+               
+                <form method="POST" action="/forma_pagamento/" id="formPagamento">
+                    {% csrf_token %}
                 
-                
-            
+                <fieldset class="pt-3">
+                    <label for="formCodigoPromocionalInput">Código Promocional</label>
+                    <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" name="CodigoPromocional" placeholder="Insira o código aqui.">
+                    
+                    <div class="form-group mt-2">
+                        <label for="FormaPagamento">Forma de Pagamento</label>
+                        <select class="form-control w-auto" id="formaPagamento" name="forma_pagamento" onchange="adicionarCampos()">
+                            {% if escolhido == 'Selecione'%}
+                                <option  selected>Selecione</option> 
+                            {% else %}
+                                <option>Selecione</option>
+                            {% endif %}   
+                            {% if escolhido == 'Cartão de Crédito'%}
+                                <option  selected>Cartão de Crédito</option> 
+                            {% else %}
+                                <option>Cartão de Crédito</option>
+                            {% endif %}                     
+                            {% if escolhido == 'PIX' %}
+                                <option selected>PIX</option>
+                            {% else %}
+                                <option>PIX</option> 
+                            {% endif %}                             
+                            {% if escolhido == 'Boleto'%}
+                                <option  selected>Boleto</option>
+                            {% else %}
+                                <option>Boleto</option>
+                            {% endif %}
+                        </select>
+                    </div>
 
-            </form>  
+                    
+                    
+                </fieldset>
+            </form>
+            <!-- <div class="container-fluid pt-4" display=>
+                    
+                <p>Valor do Pedido: <span class="text-success">R$ {{ total }}</span></p>
+                <p>Desconto: {% if desconto %}<span class="text-danger">R$ {{ desconto }}</span></p>{% endif %}
+                <p>Valor a ser pago: <span class="text-success">R$ {{ valor_final }}</span></p>
+            
+            </div> -->
+            <div class="d-flex justify-content-between pt-3">
+                <a href="{% url 'entrega/'%}" class="btn btn-dark">Voltar</a>
+                {% if avancar %}
+                    <a href="{% url 'conclusao/'%}" class="btn btn-success">Finalizar Compra</a>
+                {% else %}
+                    <a href="{% url 'conclusao/'%}" class="btn btn-success disabled" >Finalizar Compra</a>
+                {% endif %}
+            </div>  
         </div>
 
     </div>
    
-{% endblock %}
+{% endblock %}   

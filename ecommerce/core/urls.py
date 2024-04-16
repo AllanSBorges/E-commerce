@@ -19,7 +19,7 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout/"),
     path("category/<int:pk>", views.category_view, name='category/'),
     path("categories/", views.categories_view, name='categories/'),
-    path("desconto/", views.desconto_view, name="desconto/"),
+    path("conclusao/", views.conclusao_view, name="conclusao/"),
     path("avaliar/<int:pk>", views.avaliar_view, name="confirmar/"),
     path("visualizar/<int:pk>", views.visualizar_view, name='visualizar/'),
     path("perfil/", views.perfil_view, name='perfil/'),
@@ -28,6 +28,7 @@ urlpatterns = [
     path("enderecos/", views.enderecos_view, name='enderecos/'),
     path("entrega/", views.entrega_view, name="entrega/"),
     path("forma_pagamento/", views.forma_pagamento_view, name="forma_pagamento/"),
+    path("pedido/<int:pk>", views.pedido_view, name="pedido/"),
 ]
 
 if settings.DEBUG:

@@ -8,7 +8,8 @@ from django.contrib.auth.models import AbstractUser
 
 class Customer(AbstractUser):
    
-    
+    customer_cpf = models.CharField(max_length = 11, verbose_name= 'CPF')
+
     class Meta:
         verbose_name= 'Usuário'
         verbose_name_plural = 'Usuários'
@@ -103,6 +104,17 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.logradouro}, {self.complemento}, {self.numero}, {self.cidade}, {self.cep},  {self.estado}"
+    
+class Delivery(models.Model):
+    logradouro = models.CharField(max_length = 30)
+    complemento = models.CharField(max_length = 30, blank=True, null=True)
+    numero = models.IntegerField()
+    cidade = models.CharField(max_length = 30)
+    cep = models.IntegerField()
+    data_netrega = models.DateField()
+    codigo_entrega = models.CharField(max_length = 30, blank=True, null=True)
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
+
 
 class Evaluation(models.Model):
     customer_id = models.ForeignKey("Customer", on_delete=models.CASCADE)
@@ -124,6 +136,9 @@ class Discount(models.Model):
     class Meta:
         verbose_name = 'Desconto'
         verbose_name_plural = 'Descontos'
+    
+    def __str__(self):
+        return self.descricao
 
 class DiscountOrder(models.Model):
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE)

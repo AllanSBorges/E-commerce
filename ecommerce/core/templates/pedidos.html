@@ -9,22 +9,22 @@
     </div>
   
     <div class="row pt-2">
-      <table class="table">
+      <table class="table table-responsive-lg">
         <thead class="thead-dark">
           <tr>
-            <th scope="col">Número do Pedido</th>
-            <th scope="col">Data do Pedido</th>
-            <th scope="col">Status</th>
-            <th scope="col">Ver detalhes</th>
+            <th scope="col" class="w-auto" ># do Pedido</th>
+            <th scope="col" class="w-auto">Data do Pedido</th>
+            <th scope="col" class="w-auto">Status</th>
+            <th scope="col" class="w-auto">Ver detalhes</th>
           </tr>
         </thead>
         <tbody>
           {% for item in itens_paginados %}
             <tr>
-                <th scope="row"></th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td><a href="#">Mais detalhes</td>
+                <td scope="col" class="w-auto">{{ item.id }}</td>
+                <td scope="col" >{{ item.order_date }}</td>
+                <td scope="col" >{{ item.order_status }}</td>
+                <td scope="col" ><a href="../pedido/{{ item.id }}">Mais detalhes</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -63,7 +63,7 @@
               
           </div>
       </div>
-  </section>
+    </section>
   </div>
 </div>
         
