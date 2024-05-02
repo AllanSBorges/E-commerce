@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import Category, Product, Customer, Evaluation, Address, Order, OrderProduct, Discount, DiscountOrder
+from .models import Category, Product, Customer, Evaluation, Address, Order, OrderProduct, Discount, DiscountOrder, Delivery
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -9,9 +9,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.forms import modelformset_factory
 from .forms import AddressForm
+
 from random import sample
 import datetime
 import requests
+from io import BytesIO
+
+
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.units import cm
+
 
 dados = {"loja_nome": 'Hexashop',
          "loja_cnpj": '01.304.648/0001-14',
@@ -32,7 +41,7 @@ dados = {"loja_nome": 'Hexashop',
          "escritorio_end_estado": "FL",
          "escritorio_end_pais": "United States",
 
-        } # Dicionário alteração dos dados da loja (obs. Poderia ser uma entidade no banco de dados.)
+        } # Dicionário com os dados da loja (Obs. Poderia ser uma entidade no banco de dados.)
 
 def dados_nav(request):
     categorias = Category.objects.all()
@@ -127,6 +136,7 @@ def signup_view(request):
         u_name = request.POST['username']
         e = request.POST['email']
         p = request.POST['password']
+        cpf = request.POST['cpf']
 
         logradouro = request.POST['logradouro']
         complemento = request.POST['complemento']
@@ -136,7 +146,7 @@ def signup_view(request):
         estado = request.POST['estado']
 
         try:
-            usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p)
+            usuario = Customer.objects.create_user(username=u_name, first_name = f_name, last_name = l_name, email = e, password = p, customer_cpf = cpf )
             usuario.save()
         except Error:
             messages.error(request, "Ops. Nome de Usuário já cadastrado.")
@@ -231,24 +241,121 @@ def pedidos_view(request):
 
 @login_required(login_url='/login/')
 def pedido_view(request,pk):
-    context = dados_nav(request)
     pedido = Order.objects.get(pk=pk)
     items = OrderProduct.objects.filter(order_id = pedido)
+
+    desconto = DiscountOrder.objects.filter(order_id = pedido)
+
+    entrega = Delivery.objects.get(order_id = pedido)
+    if entrega:
+        entrega_logradouro = entrega.logradouro
+        entrega_numero = entrega.logradouro
+        entrega_complemento = entrega.complemento
+        entrega_cidade = entrega.cidade
+        entrega_cep = entrega.cep
+        
+
+        
+        
+    if desconto:
+        valor_desconto = desconto[0].discount_value
+    else:
+        valor_desconto = ""
     
-    dados_pedido = {}
-    for index,item in enumerate(items):
+
+    
+    dados_pedido = []
+    lista_items = [['Produto', 'Preço', 'Quantidade', 'Subtotal']]
+    valor_total = 0
+    for item in items:
         preco = item.item_price
         quantidade = item.item_quantity
         nome = item.item_id.product_name
+        subtotal = round(float(preco) * int(quantidade),2)
+        lista_items.append([nome,preco,quantidade,subtotal])
 
-        dados_pedido.setdefault(index, {'nome': nome,
-                                        'preco': preco,
-                                        'quantidade': quantidade})
-    print(dados_pedido)
+        dados_pedido.append({'nome': nome,
+                            'preco': preco,
+                            'quantidade': quantidade,
+                            'subtotal': subtotal} )
+        valor_total += subtotal
+    
+    
+    valor_com_frete = valor_total + round(float(entrega.valor_frete),2)
+
+    
+
+
+    # Criar um buffer de memória para armazenar o PDF
+    buffer = BytesIO()
+
+    logo_path = "core/static/images/logo.png"
+    
+
+    c = canvas.Canvas(buffer,pagesize=A4)
+    width, height = A4
+    c.drawCentredString(12.5 * cm, height - 5 * cm, dados['loja_cnpj'])
+    c.drawCentredString(12.5 * cm, height - 4.3 * cm, dados['loja_razao_social'])
+    c.drawCentredString(12.5 * cm, height - 3.6 * cm, dados['loja_nome'])
+    c.roundRect(2.5 * cm, height - (5.5 * cm),  17.5 * cm, 3 * cm, 15, stroke=1, fill=0)
+    c.drawImage(logo_path, 3 * cm, height - 5 * cm, width= 5 * cm, height= 2* cm ,mask=[0,17,0,17,0,17])
+
+    c.drawString(3 * cm, height - 6.5 * cm,"Situação do Pedido: {}".format(pedido.order_status))
+    c.drawString(3 * cm, height - 7.1 * cm,"Data de entrega: ")
+    c.drawString(3 * cm, height - 7.7 * cm,"Código de Rastreio: ")
+
+    c.drawString(11.5 * cm, height - 6.5 * cm,"Email da loja: %s" % dados['loja_email'])
+    c.drawString(11.5 * cm, height - 7.1 * cm,"Telefone da loja: %s" % dados['loja_tel'])
+    c.drawString(11.5 * cm, height - 7.7 * cm,"Endereço da loja:  {}, nº {}, ".format(dados['loja_end'], dados['loja_end_num']))
+    c.drawString(11.5 * cm, height - 8.3 * cm,"{}, {}, {}".format(dados['loja_end_bairo'], dados['loja_cep'], dados['loja_end_estado']))
+
+    lines =  [height - 10 * cm, height - 11 * cm]
+    for i in range(len(dados_pedido)):
+        lines.append(height - (12 + i) * cm)
+        
+    c.grid([3 * cm, 9.75 * cm, 13.5 * cm, 16.5 * cm, 19.5 * cm], lines)
+
+    c.drawCentredString(4 * cm, height - 10.65 * cm, "Produto")
+    c.drawCentredString(11.25 * cm, height - 10.65 * cm, "Preço unitário")
+    c.drawCentredString(14.75 * cm, height - 10.65 * cm, "Quantidade")
+    c.drawCentredString(17.5 * cm, height - 10.65 * cm, "Subtotal")
+
+
+    final_do_grid = 0
+    for index, item in enumerate(dados_pedido):
+        c.drawString(3.25 * cm, height - (11.65 + index) * cm, str(item['nome']))
+        c.drawString(10 * cm, height - (11.65 + index) * cm, "R$ {}".format(str(item['preco'])))
+        c.drawString(13.75 * cm, height - (11.65 + index) * cm, str(item['quantidade']))
+        c.drawString(16.75 * cm, height - (11.65 + index) * cm, "R$ {}".format(str(item['subtotal'])))
+        final_do_grid = index
+    
+    final_do_grid += 1.25
+    c.drawString(3 * cm, height - (11.65 + final_do_grid) * cm,"Valor do Pedido: R$ {}".format(str(valor_total)))
+    c.drawString(3 * cm, height - (12.15 + final_do_grid) * cm,"Valor com Frete: R$ {}".format(str(valor_com_frete)))
+    c.drawString(3 * cm, height - (12.65 + final_do_grid) * cm,"Valor do Desconto: R$ {}".format(str(valor_desconto)))
+    c.drawString(3 * cm, height - (13.15 + final_do_grid) * cm,"Valor do Pago: R$ {}".format(str(pedido.order_total)))
+
+    c.drawString(11.5 * cm, height - (11.65 + final_do_grid) * cm,"Local da Entrega:")
+    c.drawString(11.5 * cm, height - (12.15 + final_do_grid) * cm,"{}, {}, {}".format(str(entrega_logradouro), str(entrega_numero), str(entrega_complemento)))
+    c.drawString(11.5 * cm, height - (12.65 + final_do_grid) * cm,"{}, {}".format(str(entrega_cep), str(entrega_cidade)))
+    
+
+
+
+    c.showPage()
+    c.save()
+
+    
+
+    # Retornar o PDF como uma resposta
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
+    return response
 
         
 
-    return render(request, 'pedido.html', context)
+    
 
 @login_required(login_url='/login/')
 def enderecos_view(request):
@@ -306,8 +413,8 @@ def entrega_view(request):
 
 
         escolhido = request.POST.get('escolhido')
-        print(escolhido)
         context.setdefault('escolhido', escolhido)
+        request.session['endereco_entrega'] = escolhido
         total_weight = 0
         total_height = 0
         total_width = 0
@@ -491,18 +598,20 @@ def forma_pagamento_view(request):
         if len(desconto):
             if desconto[0].validade.date() >= datetime.date.today():
                 percentagem_desc = desconto[0].porcentagem / 100
-                percentagem_vlw = round(valor_com_frete * percentagem_desc,2)
-                valor_final = round(valor_com_frete - percentagem_vlw,2)
-                context.setdefault('desconto', percentagem_vlw)            
+                desconto_vlw = round(valor_com_frete * percentagem_desc,2)
+                valor_final = round(valor_com_frete - desconto_vlw,2)
+                context.setdefault('desconto', desconto_vlw)            
                 context.setdefault('valor_final', valor_final )
                 context.setdefault('total', valor_com_frete )
+                context.setdefault('codicodigo_promocional', codigo_promocional)
                 request.session['desconto'] = desconto[0].codigo
-                
+                request.session['valor_desconto'] = desconto_vlw
+
         else:
             context.setdefault('total',valor_com_frete )
             context.setdefault('valor_final',valor_com_frete)
-            if 'desconto' in context: context.pop('desconto')
-            if 'desconto' in request.session: request.session.pop('desconto')
+            # if 'desconto' in context: context.pop('desconto')
+            # if 'desconto' in request.session: request.session.pop('desconto')
             
 
         
@@ -541,7 +650,7 @@ def conclusao_view(request):
     if context['qtd_prod'] == 0:
         return redirect('/')
     
-    print(request.session.items())
+    
 
     
     forma = request.session.get('forma')
@@ -556,8 +665,26 @@ def conclusao_view(request):
         item_quantidade = int(cart_items[item]['quantidade'])
         orderProd = OrderProduct(item_id = product, order_id = pedido, item_price = item_price, item_quantity = item_quantidade)
         orderProd.save()
-    #print(request.session.items())
+    
+    endereco_entrega = Address.objects.filter(logradouro = request.session.get('endereco_entrega'), user_id = request.user)[0]
 
+    entrega = Delivery(logradouro = endereco_entrega.logradouro, complemento = endereco_entrega.complemento, 
+                       numero = endereco_entrega.numero, cidade = endereco_entrega.cidade, cep = endereco_entrega.cep, order_id = pedido, valor_frete = request.session.get('valor_frete'))
+    entrega.save()
+
+    if request.session.get('desconto'):
+        desconto = Discount.objects.filter(codigo = request.session.get('desconto'))[0]
+
+        desconto_pedido = DiscountOrder(order_id=pedido, discount_id = desconto, discount_value = request.session.get('valor_desconto') )
+        desconto_pedido.save()
+
+    
+    session_items = ['cart','total', 'valor_frete','valor_com_frete','valor_final',
+                     'valor_desconto','desconto', 'forma','endereco_entrega']
+    for session_item in session_items:
+        if request.session.get(session_item):
+            request.session.pop(session_item)
+ 
 
     return render(request, 'conclusao.html',context)
 

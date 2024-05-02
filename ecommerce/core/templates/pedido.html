@@ -1,19 +1,161 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Hexashop - Pedido{% endblock %}
+<!doctype html>
+<html lang="pt-br">
+  	<head>
+    	
+    	<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block content %}
-    <div class="main-banner pt-5 mt-5">
+    	<title>Detalhes do Produto</title>
+		<style>
+			@page {
+				size: a4 portrait;
+				@frame header_frame {           /* Static Frame */
+					left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+					
+				}
+				@frame content_frame {          /* Content Frame */
+					left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+					margin-top: 10px;
+					
+				}
+				@frame footer_frame {           /* Another static Frame */
+					-pdf-frame-content: footer_content;
+					left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+					-pdf-frame-border: 1;
+				}
+			}
 
-        <div class="container">
-            
-                
-                
-            
+			span {
+				padding-left: 20pt;
+			}
 
-            
-        </div>
+			p, ul {
+				margin-top: 10px;
+			}
 
-    </div>
-   
-{% endblock %}
+			p {
+				padding: 10px;
+			}
+
+			.fantasia, .razao-social, .cnpj {
+				display: inline;
+				padding: 5px;
+			
+			}
+
+			.fantasia {
+				position: fixed;
+  				bottom: 0;
+  				right: 10;
+				margin: 20px;
+			}
+
+			.cabecalho {
+				border: 1px solid black;
+				border-radius: 5px;
+				padding: 5px;
+			}
+
+			.tabela {
+				border: 1px solid black;
+				border-collapse: collapse;
+				text-align: center;
+				padding-top: 5px;
+				width: 50%;
+			}
+
+			.corpo table {
+				width: 50%;
+				column-count: 2;
+			}
+
+			ul {
+				list-style-type: none;
+				column-count: 2;
+			}
+
+
+		
+			
+		</style>
+		
+			
+			
+			
+		
+	</head>
+	<body>
+		<!-- Content for Static Frame 'header_frame' -->
+    	<div id="header_content">
+			<div class="cabecalho">
+				<img src="core/static/images/logo.png" class="logo" alt="logo">
+				
+				<span class="fantasia">{{ dados.loja_nome }}</span>
+				<p class="razao-social">{{ dados.loja_razao_social }}</p>
+				<p class="cnpj">{{ dados.loja_cnpj }}</p>
+			</div>	
+		</div>
+
+		<!-- Content for Static Frame 'footer_frame' -->
+		<div id="footer_content">(c) - page <pdf:pagenumber>
+			of <pdf:pagecount>
+		</div>
+
+    <!-- HTML Content -->
+    
+		
+			
+		
+		
+		<div class="corpo">
+			<ul>
+				<li>Situação do Pedido: </li>
+				<li>Codigo de Rastreio:</li>
+				<li>Data da entrega: </li>
+				<li>Telefone: {{ dados.loja_tel }}</li>
+				<li>E-mail da loja: {{ dados.loja_email }}</li>
+				<li>Endereço da Loja: {{ dados.loja_end }}, {{ dados.loja_end_num }}, {{ dados.loja_end_bairo }}, {{ dados.loja_cep }}  </li>
+				
+			</ul>
+		</div>
+		<div>
+			<table class="tabela">
+				<tr>
+					<th>Produto</th>
+					<th>Preço</th>
+					<th>Quantidade</th>
+					<th>Subtotal</th>
+				</tr>
+				{% for chave, valor in dados_pedido.items %}
+				<tr>
+					<td> {{ valor.nome }}</td>
+					<td> {{ valor.preco }} </td>
+					<td> {{ valor.quantidade }}</td>
+					<td> {{ valor.subtotal }} </td>
+					
+				</tr>
+				{% endfor %}				
+			</table>
+		</div>
+				
+		
+		
+		<footer class="rodape">
+			<ul>
+				<li>Valor total do pedido:</li>
+				<li>Valor com o frete:</li>
+				<li>Desconto oferecido:</li>
+				<li>Valor a ser pago</li>
+				<li>Endereço de entrega</li>
+				<li>AAA<li>
+				<li>BBB<li>
+				
+				
+			
+			</ul>
+		</footer>
+		   
+  </body>
+
+	</body>
+</html> 

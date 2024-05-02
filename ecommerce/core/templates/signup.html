@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Hexashop - Cadastre-se {% endblock %}
+{% block title %}Cadastre-se{% endblock %}
 {% block content %}
 <div class="main-banner">
     <div class="container">
@@ -13,7 +13,7 @@
                 <h2 class="row justify-content-md-center py-4">Cadastro de Usuário</h2>
                 <div class="row justify-content-md-center">
                     
-                    <form method="POST" action="{% url 'signup' %}">
+                    <form method="POST" action="{% url 'signup/' %}">
                         {% csrf_token %}
                             <div class="row py-1 px-3">
                                 <h4>Dados pessoais</h4>
@@ -37,6 +37,11 @@
                             <div class="row py-2 px-3">
                                 <div class="col">
                                     <input type="password" name="password" class="form-control" placeholder="Digite sua senha" required>
+                                </div>
+                            </div>
+                            <div class="row py-2 px-3">
+                                <div class="col">
+                                    <input type="text" name="cpf" class="form-control" placeholder="Digite seu CPF" required>
                                 </div>
                             </div>                            
                             <div class="row py-1 px-3">

@@ -111,8 +111,9 @@ class Delivery(models.Model):
     numero = models.IntegerField()
     cidade = models.CharField(max_length = 30)
     cep = models.IntegerField()
-    data_netrega = models.DateField()
-    codigo_entrega = models.CharField(max_length = 30, blank=True, null=True)
+    data_entrega = models.DateField(null = True)
+    valor_frete = models.DecimalField(max_digits = 7, decimal_places=2)
+    codigo_rastreio = models.CharField(max_length = 30, blank=True, null=True)
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
 
 

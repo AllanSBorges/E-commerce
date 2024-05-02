@@ -2,7 +2,7 @@
 	
 	"use strict";
 	$('.owl-men-item').owlCarousel({
-		items:1,
+		items:5,
 		loop:true,
 		dots: true,
 		nav: true,

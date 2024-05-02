@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Hexashop - Promoção{% endblock %}
+{% block title %}Promoção{% endblock %}
 {% block content %}
 
     <script>
@@ -103,7 +103,7 @@ function adicionarCampos() {
                 
                 <fieldset class="pt-3">
                     <label for="formCodigoPromocionalInput">Código Promocional</label>
-                    <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" name="CodigoPromocional" placeholder="Insira o código aqui.">
+                    <input type="text" class="form-control w-25" id="formCodigoPromocionalInput" name="CodigoPromocional" placeholder="Insira o código aqui." {% if codigo_promocional %} name="{{ codigo_promocional }}" {% endif%}>
                     
                     <div class="form-group mt-2">
                         <label for="FormaPagamento">Forma de Pagamento</label>
