@@ -22,7 +22,8 @@ from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.units import cm
 
 
-dados = {"loja_nome": 'Hexashop',
+dados = {
+         "loja_nome": 'Hexashop',
          "loja_cnpj": '01.304.648/0001-14',
          "loja_razao_social": 'Hexashop LTDA',
          "loja_email": 'sac@hexashop.com',
