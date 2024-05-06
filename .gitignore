@@ -127,12 +127,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-\bin
-\include
-\lib
-\lib64
-\pyvenv
-\pyvenv.cfg
+bin
+include
+lib
+lib64
+pyvenv
+pyvenv.cfg
 
 # Spyder project settings
 .spyderproject
