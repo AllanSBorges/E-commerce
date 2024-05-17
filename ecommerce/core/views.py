@@ -193,6 +193,21 @@ def perfil_view(request):
     return render(request,'perfil.html', context)
     
 
+def recuperar_view(request):
+
+    context = dados_nav(request)
+
+    if request.method == "POST":
+        email_cadastrado = request.POST['email_cadastrado']
+        usuario = Customer.objects.filter(email=email_cadastrado)
+        if usuario:
+            print(usuario[0])
+        else:
+            messages.warning(request, "Email nao encontrado, por favor tente novamente.")
+
+
+    return render(request, 'recuperar.html', context)
+
 @login_required(login_url='/login/')
 def alterar_senha_view(request):
     context = dados_nav(request)

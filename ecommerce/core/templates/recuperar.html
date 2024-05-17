@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Recuperar Senha{% endblock %}
+
+{% block content %}
+
+<div class="main-banner pt-5 mt-5" id="top">
+	<div class="container-fluid px-5">
+		<div class="row justify-content-center pt-3">
+			<div class="cols">
+				<h1>Recuperar senha</h1>
+			</div>
+		</div>
+		<div class="row justify-content-center pt-3">
+			<form class="form-inline" method="POST" action="{% url 'recuperar/' %}">
+				{% csrf_token %}
+				<div class="form-group mx-sm-3 mb-2">
+					<label for="inputPassword2" class="mr-2">Email:</label>
+					<input type="email" class="form-control" required name="email_cadastrado" id="inputPassword2" placeholder="Entre com o e-mail cadastrado">
+				</div>
+				<button type="submit" class="btn btn-primary mb-2">Verificar</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

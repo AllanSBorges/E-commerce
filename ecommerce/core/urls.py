@@ -29,6 +29,7 @@ urlpatterns = [
     path("entrega/", views.entrega_view, name="entrega/"),
     path("forma_pagamento/", views.forma_pagamento_view, name="forma_pagamento/"),
     path("pedido/<int:pk>", views.pedido_view, name="pedido/"),
+    path("recuperar/", views.recuperar_view, name="recuperar/"),
 ]
 
 if settings.DEBUG:
