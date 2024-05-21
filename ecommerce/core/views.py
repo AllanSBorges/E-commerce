@@ -9,11 +9,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.forms import modelformset_factory
 from .forms import AddressForm
+from django.core.mail import send_mail
+
 
 from random import sample
+import string
 import datetime
 import requests
+import os
 from io import BytesIO
+
 
 
 from reportlab.pdfgen import canvas
@@ -197,16 +202,73 @@ def recuperar_view(request):
 
     context = dados_nav(request)
 
-    if request.method == "POST":
-        email_cadastrado = request.POST['email_cadastrado']
+    if request.method == "POST":           
+
+        email_cadastrado = str(request.POST['email_cadastrado'])
         usuario = Customer.objects.filter(email=email_cadastrado)
         if usuario:
-            print(usuario[0])
+            letras = string.ascii_letters + string.digits
+            codigo_recuperacao = "".join(sample(letras, 8))
+            try:
+                send_mail(
+                subject = "Código de recuperação",
+                message = "Este é o código de recuperação, ele expira em 1 hora. {}".format(codigo_recuperacao),
+                from_email = os.environ.get("FROM_EMAIL"),
+                recipient_list = ["aefc402490-381683+1@inbox.mailtrap.io"], # Dveria ser o email enontrado, mas o sandbox só envia para este endereço.
+                fail_silently = False)
+
+                request.session['email_encontrado'] = email_cadastrado
+                request.session['codigo_recuperacao'] = codigo_recuperacao
+                print(request.session.get('email_encontrado'))        
+                messages.success(request, "Este é o código de recuperação, ele expira em 1 hora. {}".format(codigo_recuperacao))
+                return render(request, 'nova_senha.html', context)
+               
+            except Error:
+                messages.error(request, "Error ao enviar o email.")
+
         else:
+            #if request.session.get('email_econtrado'):
+             #   request.session.pop('email_econtrado')
+
             messages.warning(request, "Email nao encontrado, por favor tente novamente.")
 
 
     return render(request, 'recuperar.html', context)
+
+def nova_senha_view(request):
+
+    context = dados_nav(request)
+
+    email_usuario = request.session.get('email_encontrado')
+
+
+
+    if request.method == "POST":
+
+        if email_usuario:
+                nova_senha = request.POST['nova_senha']
+                codigo_verificacao = request.POST['codigo_verificacao']
+                usuario_encontrado = Customer.objects.filter(email=email_usuario)[0]
+
+                if codigo_verificacao == request.session.get('codigo_recuperacao'):
+                    usuario_encontrado.set_password(nova_senha)
+                    usuario_encontrado.save()
+
+                    messages.success(request, "Senha alterada com sucesso.")
+
+                    if request.session.get('codigo_verificacao'):
+                        request.session.pop('codigo_verificacao')
+
+                    if request.session.get('email_econtrado'):
+                        request.session.pop('email_econtrado')
+    else:
+        codigo_recuperacao = request.session.get('codigo_recuperacao')
+        if codigo_recuperacao:
+            messages.success(request, "Este é o código de recuperação, ele expira em 1 hora. {}".format(codigo_recuperacao))
+        else:
+            return redirect('/')
+                    
+    return render(request, 'nova_senha.html', context)
 
 @login_required(login_url='/login/')
 def alterar_senha_view(request):

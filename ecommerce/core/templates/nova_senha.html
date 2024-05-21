@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Recuperar Senha{% endblock %}
+
+{% block content %}
+
+<div class="main-banner pt-5 mt-5" id="top">
+	<div class="container-fluid px-5">		
+		<div class="row justify-content-center pt-3">
+			<div class="cols">
+				<h1>Nova senha</h1>
+			</div>
+		</div>
+		<div class="row justify-content-center pt-3">
+			<form class="form" method="POST" action="{% url 'nova_senha/' %}">
+				{% csrf_token %}
+				<div class="form-group mx-sm-3 mb-2">
+					<label for="inputPassword2" class="mr-2">Código de verificação:</label>
+					<input type="text" class="form-control" required name="codigo_verificacao" id="inputCodigo" placeholder="Entre o código que foi enviado e-mail cadastrado.">
+				</div>
+                <div class="form-group mx-sm-3 mb-2">
+					<label for="inputPassword2" class="mr-2">Nova senha:</label>
+					<input type="password" class="form-control" required name="nova_senha" id="inputPassword" placeholder="Entre com a nova senha.">
+				</div>
+                <div class="form-group mx-sm-3 mb-2">
+				    <button type="submit" class="btn btn-primary my-2">Alterar senha</button>
+                </div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
