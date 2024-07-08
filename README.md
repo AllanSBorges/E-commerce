@@ -20,13 +20,14 @@ Eu e um amigo tivemos a ideia de montar uma loja virtual de dropshipping, e depo
 - PostgreSQL 16.3 ou versão mais recente instalada
 - Git
 
-### Procedimento de instalção
+
+### Procedimento de instalação
 
 ```bash
-pip install foobar
+git clone https://github.com/AllanSBorges/E-commerce
 ```
 
-## Usage
+## Utilização
 
 ```python
 import foobar
