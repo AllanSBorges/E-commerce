@@ -21,26 +21,77 @@ Eu e um amigo tivemos a ideia de montar uma loja virtual de dropshipping, e depo
 - Git
 
 
-### Procedimento de instalação
+### Procedimento de instalação (Linux)
 
 ```bash
-git clone https://github.com/AllanSBorges/E-commerce
+git clone https://github.com/AllanSBorges/E-commerce.git
+
+cd E-commerce
+
+```
+
+Crie um arquivo .env para armazenar as varáveis de ambiente.
+
+```bash
+touch .env
+
+```
+
+Altere o arquivo .env colocando as suas informações.
+Segue o conteúdo do arquivo:
+
+SECRET_KEY="Chave de segurança do Django"
+DATABASE_ENGINE="django.db.backends.postgresql" 
+DATABASE_NAME="Nome do Banco de Dados"
+DATABASE_USER="Nome do usuário do Banco de Dados"
+DATABASE_PASSWORD="Senha do usuário do Banco de Dado"
+DATABASE_HOST="Endereço do banco de dados"
+DATABASE_PORT="Porta em que o Django irá se conectar com o Banco de Dados"
+EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST="Serviço de email como por exemplo smtp do Gmail."
+EMAIL_PORT="Porta que o serviço de email irá utilizar"
+EMAIL_HOST_USER="Login no serviço de email"
+EMAIL_HOST_PASSWORD="Senha do Login do serviço de email"
+FROM_EMAIL="E-mail que o Django usará para envio de e-mail" 
+DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
+
+ 
+Execute o código:
+```bash
+python -m venv venv
+
+source venv/bin/activate
+
+pip install python-dotenv
+
+pip install -r requirements.txt
+
+cd ecommerce
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+pyhon manage.py collectstatic
 ```
 
 ## Utilização
 
-```python
-import foobar
+No diretório raiz execute
 
-# returns 'words'
-foobar.pluralize('word')
+```bash
+source venv/bin/activate
 
-# returns 'geese'
-foobar.pluralize('goose')
+cd ecommerce 
 
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+python manage.py runserver
 ```
+Lembrando que o servidor nativo
+do Django é apenas para Desenvolvimento
+para produção seria necessário configurar um servidor
+web como guinicorn por exemplo.
 
 ## Contribuição
 
