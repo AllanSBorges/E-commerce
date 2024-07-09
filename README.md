@@ -40,6 +40,7 @@ touch .env
 Altere o arquivo .env colocando as suas informações.
 Segue o conteúdo do arquivo:
 
+```bash
 SECRET_KEY="Chave de segurança do Django"
 DATABASE_ENGINE="django.db.backends.postgresql" 
 DATABASE_NAME="Nome do Banco de Dados"
@@ -54,7 +55,7 @@ EMAIL_HOST_USER="Login no serviço de email"
 EMAIL_HOST_PASSWORD="Senha do Login do serviço de email"
 FROM_EMAIL="E-mail que o Django usará para envio de e-mail" 
 DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
-
+```
  
 Execute o código:
 ```bash
